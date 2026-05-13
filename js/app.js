@@ -93,32 +93,29 @@ function initSeedData() {
             { text: 'Newsletter subscriber baru: user@email.com', time: '1 hari lalu', type: 'green' },
             { text: 'Produk "Totebag Kanvas" diperbarui', time: '2 hari lalu', type: 'blue' }
         ]);
+        DB.set('templates', [
+            { id: 't1', title: 'Template Keuangan UMKM', category: 'Laporan Keuangan', desc: 'Template Excel untuk mencatat pendapatan dan pengeluaran usaha.', fileName: 'template keuangan.xlsx', file: 'files/template keuangan.xlsx' }
+        ]);
+        DB.set('videos', [
+            { id: 'v1', title: 'Tips Foto Produk Pakai HP', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara memotret produk dengan smartphone agar terlihat profesional.' },
+            { id: 'v2', title: 'Strategi Marketing di Media Sosial', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara efektif memasarkan produk UMKM di Instagram, TikTok.' },
+            { id: 'v3', title: 'Cara Menentukan Harga Jual', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Tutorial menghitung HPP dan margin keuntungan yang ideal.' }
+        ]);
+        DB.set('modules', [
+            { id: 'm1', title: 'Modul Pemasaran Digital', category: 'Marketing', desc: 'Panduan lengkap strategi pemasaran digital.', fileName: 'Modul Pemasaran Digital.pdf', file: 'files/Modul Pemasaran Digital.pdf' },
+            { id: 'm2', title: 'Modul Kewirausahaan', category: 'Dasar', desc: 'Langkah awal membangun mental wirausaha.', fileName: 'Modul Kewirausahaan.pdf', file: 'files/Modul Kewirausahaan.pdf' },
+            { id: 'm3', title: 'Modul Branding Produk', category: 'Branding', desc: 'Cara membangun identitas brand yang kuat.', fileName: 'branding produk.pdf', file: 'files/branding produk.pdf' },
+            { id: 'm4', title: 'Modul Pencatatan Keuangan', category: 'Keuangan', desc: 'Dasar-dasar akuntansi dan pencatatan kas.', fileName: 'Pencatatan Keuangan.pdf', file: 'files/Pencatatan Keuangan.pdf' }
+        ]);
+        DB.set('quizzes', [
+            { id: 'q1', title: 'Quiz: Dasar-Dasar UMKM', link: 'https://quizizz.com', desc: 'Uji pemahaman tentang konsep dasar UMKM.', difficulty: 'Mudah' },
+            { id: 'q2', title: 'Quiz: Strategi Marketing', link: 'https://quizizz.com', desc: 'Test pengetahuan tentang strategi pemasaran.', difficulty: 'Menengah' },
+            { id: 'q3', title: 'Quiz: Manajemen Keuangan', link: 'https://quizizz.com', desc: 'Latihan soal pengelolaan keuangan UMKM.', difficulty: 'Sulit' }
+        ]);
+
         DB.set('initialized', true);
+        DB.set('init_v8', true);
     }
-    DB.set('templates', [
-        { id: 't1', title: 'Template Keuangan UMKM', category: 'Laporan Keuangan', desc: 'Template Excel untuk mencatat pendapatan dan pengeluaran usaha.', fileName: 'template keuangan.xlsx', file: 'files/template keuangan.xlsx' }
-    ]);
-    DB.set('videos', [
-        { id: 'v1', title: 'Tips Foto Produk Pakai HP', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara memotret produk dengan smartphone agar terlihat profesional.' },
-        { id: 'v2', title: 'Strategi Marketing di Media Sosial', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara efektif memasarkan produk UMKM di Instagram, TikTok.' },
-        { id: 'v3', title: 'Cara Menentukan Harga Jual', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Tutorial menghitung HPP dan margin keuntungan yang ideal.' }
-    ]);
-    DB.set('modules', [
-        { id: 'm1', title: 'Modul Pemasaran Digital', category: 'Marketing', desc: 'Panduan lengkap strategi pemasaran digital.', fileName: 'Modul Pemasaran Digital.pdf', file: 'files/Modul Pemasaran Digital.pdf' },
-        { id: 'm2', title: 'Modul Kewirausahaan', category: 'Dasar', desc: 'Langkah awal membangun mental wirausaha.', fileName: 'Modul Kewirausahaan.pdf', file: 'files/Modul Kewirausahaan.pdf' },
-        { id: 'm3', title: 'Modul Branding Produk', category: 'Branding', desc: 'Cara membangun identitas brand yang kuat.', fileName: 'branding produk.pdf', file: 'files/branding produk.pdf' },
-        { id: 'm4', title: 'Modul Pencatatan Keuangan', category: 'Keuangan', desc: 'Dasar-dasar akuntansi dan pencatatan kas.', fileName: 'Pencatatan Keuangan.pdf', file: 'files/Pencatatan Keuangan.pdf' }
-    ]);
-    DB.set('quizzes', [
-        { id: 'q1', title: 'Quiz: Dasar-Dasar UMKM', link: 'https://quizizz.com', desc: 'Uji pemahaman tentang konsep dasar UMKM.', difficulty: 'Mudah' },
-        { id: 'q2', title: 'Quiz: Strategi Marketing', link: 'https://quizizz.com', desc: 'Test pengetahuan tentang strategi pemasaran.', difficulty: 'Menengah' },
-        { id: 'q3', title: 'Quiz: Manajemen Keuangan', link: 'https://quizizz.com', desc: 'Latihan soal pengelolaan keuangan UMKM.', difficulty: 'Sulit' }
-    ]);
-
-    DB.set('initialized', true);
-}
-
-DB.set('init_v8', true);
 }
 initSeedData();
 
