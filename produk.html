@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produk UMKM - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+    <div id="navbar"></div>
+    <section class="page-header">
+        <div class="container">
+            <div><h1>Produk UMKM</h1><p>Temukan inspirasi dari berbagai produk UMKM yang bisa kamu jadikan referensi untuk memulai usaha.</p></div>
+            <div class="page-header-icon">🛍️</div>
+        </div>
+    </section>
+    <section class="produk-page">
+        <div class="container">
+            <div class="filter-bar" id="filterBar">
+                <button class="filter-btn active" onclick="filterProducts('all', this)">Semua</button>
+            </div>
+            <div class="products-grid-4" id="allProducts"></div>
+        </div>
+    </section>
+    <div id="footer"></div>
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('navbar').innerHTML = renderNavbar('produk');
+        document.getElementById('footer').innerHTML = renderFooter();
+        const products = DB.get('products') || [];
+        const cats = [...new Set(products.map(p => p.category))];
+        const filterBar = document.getElementById('filterBar');
+        cats.forEach(c => {
+            filterBar.innerHTML += `<button class="filter-btn" onclick="filterProducts('${c}', this)">${c}</button>`;
+        });
+        function filterProducts(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
+            document.getElementById('allProducts').innerHTML = filtered.map(p => renderProductCard(p)).join('');
+        }
+        filterProducts('all', document.querySelector('.filter-btn'));
+    </script>
+</body>
+</html>

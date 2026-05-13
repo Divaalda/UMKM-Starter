@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="login-card"
+            style="max-width: 480px; width: 100%; padding: 3rem 2.5rem; background: #fff; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);">
+            <div class="logo" style="margin-bottom: 2rem; text-align: center;">
+                <img src="LOGO.png" alt="UMKM Starter Hub"
+                    style="height: 48px; object-fit: contain; margin: 0 auto 1.5rem;">
+                <h2 style="font-size: 1.5rem; color: var(--neutral-900);">Buat Akun Baru</h2>
+            </div>
+
+            <div class="login-error" id="registerError"
+                style="display: none; background: var(--color-danger); color: white; padding: 0.75rem; border-radius: var(--radius-md); margin-bottom: 1rem; text-align: center; font-size: 0.85rem;">
+                Ada kesalahan dalam pengisian formulir!</div>
+
+            <form id="registerForm" onsubmit="doRegister(event)">
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label"
+                        style="font-weight: 600; color: var(--neutral-800); margin-bottom: 0.5rem; display: block; text-align: left;">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Masukkan username" required
+                        style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--neutral-200); border-radius: var(--radius-md); font-size: 0.95rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label"
+                        style="font-weight: 600; color: var(--neutral-800); margin-bottom: 0.5rem; display: block; text-align: left;">Email
+                        / Nomor Telepon</label>
+                    <input type="text" class="form-control" id="contact" placeholder="Masukkan email / no. hp" required
+                        style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--neutral-200); border-radius: var(--radius-md); font-size: 0.95rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label class="form-label"
+                        style="font-weight: 600; color: var(--neutral-800); margin-bottom: 0.5rem; display: block; text-align: left;">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Buat password" required
+                        style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--neutral-200); border-radius: var(--radius-md); font-size: 0.95rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="form-label"
+                        style="font-weight: 600; color: var(--neutral-800); margin-bottom: 0.5rem; display: block; text-align: left;">Konfirmasi
+                        Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Ulangi password"
+                        required
+                        style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--neutral-200); border-radius: var(--radius-md); font-size: 0.95rem;">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg"
+                    style="width:100%; margin-top:0.5rem; background-color: #2b4e33; border-color: #2b4e33; padding: 0.85rem; font-weight: 600; font-size: 0.95rem; border-radius: var(--radius-md);">Daftar
+                    Sekarang</button>
+            </form>
+
+            <p style="text-align:center; margin-top:2rem; font-size:0.9rem; color: var(--neutral-600);">
+                Sudah punya akun? <a href="login.html" style="color: #2b4e33; font-weight: 700;">Masuk di sini</a>
+            </p>
+
+            <p style="text-align:center; margin-top:1rem; font-size:0.9rem;">
+                <a href="index.html" style="color: var(--neutral-600); font-weight: 500;">← Kembali ke Beranda</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        if (DB.get('auth') && DB.get('auth').role === 'admin') {
+            window.location.href = 'admin/dashboard.html';
+        }
+
+        function doRegister(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const c = document.getElementById('contact').value;
+            const p = document.getElementById('password').value;
+            const cp = document.getElementById('confirmPassword').value;
+            const errorEl = document.getElementById('registerError');
+
+            if (p !== cp) {
+                errorEl.textContent = 'Password dan Konfirmasi Password tidak cocok!';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            // Save user to DB
+            let users = DB.get('users') || [];
+
+            // Check if user already exists
+            if (users.find(user => user.username === u || user.contact === c)) {
+                errorEl.textContent = 'Username atau Email/No HP sudah terdaftar!';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const newUser = {
+                id: genId(),
+                username: u,
+                contact: c,
+                password: p, // Storing in plain text for demo purposes
+                createdAt: new Date().toISOString(),
+                role: 'user'
+            };
+
+            users.push(newUser);
+            DB.set('users', users);
+
+            // Add activity log
+            let activities = DB.get('activities') || [];
+            activities.unshift({
+                text: 'Pengguna baru terdaftar: ' + u,
+                time: 'Baru saja',
+                type: 'green'
+            });
+            if (activities.length > 10) activities.pop();
+            DB.set('activities', activities);
+
+            // Log them in immediately
+            DB.set('auth', { username: u, role: 'user', loggedIn: Date.now() });
+
+            showToast('Pendaftaran berhasil! Mengalihkan...', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+    </script>
+</body>
+
+</html>

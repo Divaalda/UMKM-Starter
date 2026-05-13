@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Step - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+    <style>
+        .gd-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+        .gd-breadcrumb { font-size: 0.85rem; color: var(--neutral-500); margin-bottom: 2rem; }
+        .gd-breadcrumb a { color: var(--primary-600); text-decoration: none; }
+        .gd-breadcrumb a:hover { text-decoration: underline; }
+        
+        /* Progress Bar */
+        .gd-progress { display: flex; align-items: center; justify-content: space-between; position: relative; margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .gd-progress::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--neutral-200); z-index: 1; transform: translateY(-50%); }
+        .gd-step { width: 36px; height: 36px; border-radius: 50%; background: var(--neutral-200); color: var(--neutral-600); display: flex; align-items: center; justify-content: center; font-weight: 700; position: relative; z-index: 2; transition: all 0.3s; }
+        .gd-step.active { background: var(--accent-400); color: #fff; transform: scale(1.2); box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.2); }
+        .gd-step.completed { background: var(--primary-500); color: #fff; }
+        
+        /* Header Area */
+        .gd-header { display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 3rem; }
+        .gd-header-text { flex: 1; }
+        .gd-step-badge { display: inline-block; padding: 0.3rem 1rem; background: var(--primary-100); color: var(--primary-800); border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1rem; }
+        .gd-title { font-size: 2.5rem; margin-bottom: 1rem; color: var(--neutral-900); }
+        .gd-desc { font-size: 1.1rem; color: var(--neutral-600); line-height: 1.6; }
+        .gd-illustration-emoji { font-size: 8rem; line-height: 1; text-align: center; }
+        
+        /* Content Boxes */
+        .gd-box { background: var(--cream-50); border: 1px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 2rem; margin-bottom: 2rem; }
+        .gd-box-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 700; color: var(--primary-800); }
+        .gd-box-icon { font-size: 2rem; }
+        
+        .gd-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .gd-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        
+        .gd-card { background: #fff; border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04); }
+        .gd-card-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .gd-card h4 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--neutral-800); }
+        .gd-card p { font-size: 0.85rem; color: var(--neutral-600); line-height: 1.6; }
+        
+        /* Specific layouts */
+        .gd-list { margin-left: 1.5rem; }
+        .gd-list li { margin-bottom: 0.75rem; font-size: 0.95rem; }
+        .gd-list li strong { color: var(--primary-700); }
+        
+        .gd-formula { display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin: 2rem 0; text-align: center; border: 1px solid var(--neutral-100); }
+        .gd-formula-item { flex: 1; }
+        .gd-formula-title { font-weight: 700; font-size: 1.1rem; color: var(--primary-800); margin-bottom: 0.5rem; }
+        .gd-formula-desc { font-size: 0.8rem; color: var(--neutral-500); }
+        .gd-formula-op { font-size: 1.5rem; font-weight: 800; color: var(--neutral-400); width: 40px; }
+        .gd-formula-result { background: var(--accent-50); padding: 1rem; border-radius: var(--radius-md); border: 2px solid var(--accent-400); }
+        
+        .gd-tips { display: flex; gap: 1.5rem; align-items: flex-start; background: var(--accent-50); border: 1px solid var(--accent-200); border-radius: var(--radius-xl); padding: 1.5rem; margin-top: 3rem; }
+        .gd-tips-icon { font-size: 2.5rem; }
+        .gd-tips-content h4 { color: var(--accent-700); margin-bottom: 0.5rem; }
+        .gd-tips-content p { font-size: 0.95rem; margin: 0; line-height: 1.6; }
+        
+        /* Navigation Buttons */
+        .gd-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--neutral-200); }
+        
+        @media(max-width: 768px) {
+            .gd-header { flex-direction: column; text-align: center; }
+            .gd-illustration-emoji { margin: 0 auto; }
+            .gd-grid-3, .gd-grid-4 { grid-template-columns: 1fr; }
+            .gd-formula { flex-direction: column; gap: 1rem; }
+            .gd-formula-op { transform: rotate(90deg); margin: 0 auto; }
+            .gd-nav { flex-direction: column-reverse; gap: 1rem; }
+            .gd-nav button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar"></div>
+    
+    <div class="gd-container">
+        <div class="gd-breadcrumb">
+            <a href="starter-guide.html">Starter Guide</a> &gt; <span id="bcStep">Step 1</span>
+        </div>
+        
+        <div class="gd-progress" id="progressBar">
+            <div class="gd-step" id="p1">1</div>
+            <div class="gd-step" id="p2">2</div>
+            <div class="gd-step" id="p3">3</div>
+            <div class="gd-step" id="p4">4</div>
+            <div class="gd-step" id="p5">5</div>
+        </div>
+        
+        <div id="stepContent"></div>
+        
+        <div class="gd-nav">
+            <button class="btn btn-outline" id="btnPrev">← Kembali</button>
+            <button class="btn btn-primary" id="btnNext">Lanjut ke Step 2 →</button>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('navbar').innerHTML = renderNavbar('guide');
+        document.getElementById('footer').innerHTML = renderFooter();
+
+        const stepData = [
+            // STEP 1
+            `<div class="gd-header">
+                <div class="gd-header-text">
+                    <div class="gd-step-badge">STEP 1</div>
+                    <h1 class="gd-title">Menentukan Ide Usaha</h1>
+                    <p class="gd-desc">Temukan ide usaha yang sesuai dengan minat dan peluang di sekitarmu.</p>
+                </div>
+                <div class="gd-illustration-emoji">💡</div>
+            </div>
+            <div class="gd-box" style="background:#e8f5e9;">
+                <div class="gd-box-title"><span class="gd-box-icon">🚀</span> Kenapa Ide Usaha Penting?</div>
+                <p>Ide usaha adalah langkah awal yang menentukan arah bisnismu. Ide yang tepat membuat usaha lebih mudah dijalankan dan memiliki peluang sukses lebih besar.</p>
+            </div>
+            <h3 style="margin-bottom:1.5rem;">Cara Menentukan Ide Usaha</h3>
+            <div class="gd-grid-3">
+                <div class="gd-card">
+                    <div class="gd-card-icon">❤️</div>
+                    <h4>Kenali Minat & Keahlian</h4>
+                    <p>Pilih bidang yang disukai seperti <strong>makanan, minuman, fashion, atau kerajinan</strong> agar lebih semangat menjalaninya.</p>
+                </div>
+                <div class="gd-card">
+                    <div class="gd-card-icon">🔍</div>
+                    <h4>Lihat Peluang di Sekitar</h4>
+                    <p>Perhatikan kebutuhan orang lain atau tren yang sedang berkembang saat ini di lingkunganmu.</p>
+                </div>
+                <div class="gd-card">
+                    <div class="gd-card-icon">📋</div>
+                    <h4>Sesuaikan dengan Modal</h4>
+                    <p>Pilih ide usaha yang modal awalnya sesuai dengan kemampuan finansialmu saat ini.</p>
+                </div>
+            </div>
+            <div class="gd-box" style="margin-top:2rem;">
+                <div class="gd-box-title"><span class="gd-box-icon">🏪</span> Contoh Ide Usaha</div>
+                <ul class="gd-list">
+                    <li><strong>Makanan:</strong> Snack rumahan, cemilan pedas, makanan kekinian</li>
+                    <li><strong>Minuman:</strong> Kopi literan, minuman boba, jus sehat</li>
+                    <li><strong>Fashion:</strong> Reseller baju, aksesoris handmade, tote bag</li>
+                    <li><strong>Kerajinan:</strong> Lilin aromaterapi, bucket bunga, custom gift</li>
+                </ul>
+            </div>
+            <div class="gd-tips">
+                <div class="gd-tips-icon">⭐</div>
+                <div class="gd-tips-content">
+                    <h4>Tips:</h4>
+                    <p>Mulai dari yang kecil tapi konsisten lebih baik daripada menunggu sempurna tapi tidak pernah mulai.</p>
+                </div>
+            </div>`,
+
+            // STEP 2
+            `<div class="gd-header">
+                <div class="gd-header-text">
+                    <div class="gd-step-badge" style="background:#fff3cd; color:#856404;">STEP 2</div>
+                    <h1 class="gd-title">Menentukan Target Pasar</h1>
+                    <p class="gd-desc">Kenali siapa calon pembelimu agar produk lebih tepat sasaran.</p>
+                </div>
+                <div class="gd-illustration-emoji">🎯</div>
+            </div>
+            <div class="gd-box" style="background:#fff3cd; border-color:#ffeeba;">
+                <div class="gd-box-title"><span class="gd-box-icon">👥</span> Kenapa Target Pasar Penting?</div>
+                <p>Dengan target pasar yang jelas, kamu bisa menentukan produk, harga, dan cara promosi yang lebih efektif untuk menarik perhatian mereka.</p>
+            </div>
+            <h3 style="margin-bottom:1.5rem;">Cara Menentukan Target Pasar</h3>
+            <div class="gd-grid-3">
+                <div class="gd-card">
+                    <div class="gd-card-icon">👤</div>
+                    <h4>Tentukan Siapa Mereka</h4>
+                    <p>Tentukan target secara spesifik seperti <strong>usia remaja, mahasiswa, ibu rumah tangga, dll.</strong></p>
+                </div>
+                <div class="gd-card">
+                    <div class="gd-card-icon">⭐</div>
+                    <h4>Pahami Kebutuhan Mereka</h4>
+                    <p>Menentukan kebutuhan target, contohnya: <strong>makanan kekinian untuk mahasiswa</strong> atau <strong>makanan sehat untuk pekerja kantor</strong>.</p>
+                </div>
+                <div class="gd-card">
+                    <div class="gd-card-icon">👛</div>
+                    <h4>Sesuaikan Daya Beli</h4>
+                    <p>Sesuaikan kualitas dan harga produk dengan rentang kemampuan beli target pasarmu.</p>
+                </div>
+            </div>
+            <div class="gd-box" style="margin-top:2rem;">
+                <div class="gd-box-title"><span class="gd-box-icon">📝</span> Contoh Target Pasar</div>
+                <ul class="gd-list">
+                    <li><strong>Mahasiswa:</strong> Harga terjangkau, suka promo, makanan kekinian, aktif di medsos.</li>
+                    <li><strong>Ibu Rumah Tangga:</strong> Produk praktis, berkualitas, aman untuk keluarga.</li>
+                    <li><strong>Pekerja Kantoran:</strong> Produk cepat, simpel, makanan sehat, siap saji.</li>
+                </ul>
+            </div>
+            <div class="gd-tips">
+                <div class="gd-tips-icon">💡</div>
+                <div class="gd-tips-content">
+                    <h4>Tips:</h4>
+                    <p>Semakin spesifik target pasarmu, semakin mudah usahamu berkembang dan dikenal.</p>
+                </div>
+            </div>`,
+
+            // STEP 3
+            `<div class="gd-header">
+                <div class="gd-header-text">
+                    <div class="gd-step-badge" style="background:#ffeeba; color:#856404;">STEP 3</div>
+                    <h1 class="gd-title">Menentukan Harga Jual</h1>
+                    <p class="gd-desc">Hitung harga jual yang tepat agar tidak rugi dan tetap kompetitif di pasaran.</p>
+                </div>
+                <div class="gd-illustration-emoji">🧮</div>
+            </div>
+            <div class="gd-box" style="background:#fdfdfd;">
+                <div class="gd-box-title"><span class="gd-box-icon">💰</span> Apa Saja yang Perlu Dihitung?</div>
+                <p>Harga jual bukan hanya modal bahan baku. Ada biaya tambahan dan margin keuntungan yang perlu diperhitungkan dengan cermat, seperti yang ada pada fitur <strong>Kalkulator Harga Jual</strong>.</p>
+            </div>
+            <div class="gd-formula">
+                <div class="gd-formula-item">
+                    <div class="gd-formula-title">Modal Produksi</div>
+                    <div class="gd-formula-desc">Bahan baku, tenaga kerja</div>
+                </div>
+                <div class="gd-formula-op">+</div>
+                <div class="gd-formula-item">
+                    <div class="gd-formula-title">Biaya Tambahan</div>
+                    <div class="gd-formula-desc">Kemasan, ongkir, kuota</div>
+                </div>
+                <div class="gd-formula-op">+</div>
+                <div class="gd-formula-item">
+                    <div class="gd-formula-title">Keuntungan</div>
+                    <div class="gd-formula-desc">Persentase profit (Profit)</div>
+                </div>
+                <div class="gd-formula-op">=</div>
+                <div class="gd-formula-item gd-formula-result" style="background:#e8f5e9; border-color:#27ae60;">
+                    <div class="gd-formula-title" style="color:#27ae60;">Harga Jual</div>
+                </div>
+            </div>
+            <div class="gd-box">
+                <div class="gd-box-title">Contoh Perhitungan</div>
+                <div style="background:#fff; padding:1.5rem; border-radius:var(--radius-lg); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+                    <div style="font-size:1.1rem; line-height:1.8;">
+                        <div><strong>Modal Produksi</strong> : Rp 10.000</div>
+                        <div><strong>Biaya Tambahan</strong> : Rp 2.000</div>
+                        <div><strong>Keuntungan (30%)</strong> : Rp 3.600</div>
+                    </div>
+                    <div style="font-size:2rem; color:var(--neutral-400);"> = </div>
+                    <div style="text-align:center; padding:1rem 2rem; border:2px dashed #27ae60; border-radius:var(--radius-lg); background:#f0fdf4;">
+                        <div style="font-size:0.8rem; color:#27ae60; font-weight:700; text-transform:uppercase;">Harga Jual yang Disarankan</div>
+                        <div style="font-size:2rem; font-weight:800; color:var(--neutral-900);">Rp 15.600</div>
+                    </div>
+                </div>
+            </div>
+            <div class="gd-tips" style="flex-direction:column; align-items:center; text-align:center;">
+                <div class="gd-tips-icon">🌟</div>
+                <div class="gd-tips-content">
+                    <h4>Gunakan Kalkulator Kami!</h4>
+                    <p style="margin-bottom:1rem;">Gunakan fitur <strong>Kalkulator Harga Jual</strong> di menu website untuk menghitung harga jual secara mudah, otomatis, dan akurat.</p>
+                    <a href="kalkulator.html" class="btn btn-accent btn-lg">Buka Kalkulator Harga →</a>
+                </div>
+            </div>`,
+
+            // STEP 4
+            `<div class="gd-header">
+                <div class="gd-header-text">
+                    <div class="gd-step-badge" style="background:#dbeafe; color:#1e40af;">STEP 4</div>
+                    <h1 class="gd-title">Mulai Jualan</h1>
+                    <p class="gd-desc">Saatnya action! Pelajari cara memasarkan dan mulai menjual produk pertamamu.</p>
+                </div>
+                <div class="gd-illustration-emoji">🛒</div>
+            </div>
+            <div class="gd-box" style="background:#eff6ff; border-color:#bfdbfe;">
+                <div class="gd-box-title"><span class="gd-box-icon">🚀</span> Langkah Memulai Jualan</div>
+                <p>Jangan menunggu sempurna untuk mulai. Mulailah dari langkah sederhana dan terus belajar seiring berjalannya waktu.</p>
+            </div>
+            <div class="gd-grid-4">
+                <div class="gd-card">
+                    <div style="width:28px; height:28px; background:#3b82f6; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; margin:0 auto 1rem;">1</div>
+                    <div class="gd-card-icon">📦</div>
+                    <h4>Siapkan Produk</h4>
+                    <p>Pastikan produk sudah siap, dikemas dengan baik, rapi, dan terlihat menarik.</p>
+                </div>
+                <div class="gd-card">
+                    <div style="width:28px; height:28px; background:#3b82f6; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; margin:0 auto 1rem;">2</div>
+                    <div class="gd-card-icon">📸</div>
+                    <h4>Ambil Foto Produk</h4>
+                    <p>Gunakan pencahayaan yang baik. Foto yang jelas meningkatkan kepercayaan calon pembeli.</p>
+                </div>
+                <div class="gd-card">
+                    <div style="width:28px; height:28px; background:#3b82f6; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; margin:0 auto 1rem;">3</div>
+                    <div class="gd-card-icon">📱</div>
+                    <h4>Pilih Tempat Jualan</h4>
+                    <p>Gunakan platform <strong>WhatsApp</strong> atau <strong>Instagram</strong> sebagai platform yang paling banyak digunakan oleh semua kalangan.</p>
+                </div>
+                <div class="gd-card">
+                    <div style="width:28px; height:28px; background:#3b82f6; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; margin:0 auto 1rem;">4</div>
+                    <div class="gd-card-icon">✍️</div>
+                    <h4>Tulis Deskripsi</h4>
+                    <p>Jelaskan produk dengan jujur, singkat, menarik, dan berikan info kontak yang jelas.</p>
+                </div>
+            </div>
+            <div class="gd-box" style="margin-top:2rem;">
+                <div class="gd-box-title"><span class="gd-box-icon">📢</span> Tips Sukses Jualan</div>
+                <ul class="gd-list">
+                    <li><strong>Upload secara konsisten:</strong> Rutin posting produk di WhatsApp Story atau Instagram.</li>
+                    <li><strong>Respon cepat:</strong> Balas chat calon pembeli dengan cepat dan ramah.</li>
+                    <li><strong>Tawarkan promo:</strong> Berikan promo awal (seperti diskon) untuk menarik pembeli pertama.</li>
+                </ul>
+            </div>`,
+
+            // STEP 5
+            `<div class="gd-header">
+                <div class="gd-header-text">
+                    <div class="gd-step-badge" style="background:#f3e8ff; color:#6b21a8;">STEP 5</div>
+                    <h1 class="gd-title">Evaluasi & Konsistensi</h1>
+                    <p class="gd-desc">Evaluasi usaha secara rutin dan tetap konsisten untuk terus berkembang.</p>
+                </div>
+                <div class="gd-illustration-emoji">📊</div>
+            </div>
+            <div class="gd-box" style="background:#f3e8ff; border-color:#e9d5ff;">
+                <div class="gd-box-title"><span class="gd-box-icon">📈</span> Kenapa Evaluasi Penting?</div>
+                <p>Evaluasi membantumu mengetahui apa yang sudah berhasil dan apa yang perlu diperbaiki agar usahamu semakin maju.</p>
+            </div>
+            <h3 style="margin-bottom:1.5rem;">Cara Evaluasi Usaha</h3>
+            <div class="gd-grid-3">
+                <div class="gd-card">
+                    <div class="gd-card-icon">🛍️</div>
+                    <h4>Lihat Penjualan</h4>
+                    <p>Evaluasi: <strong>produk mana yang laku dijual?</strong> Kenapa ada produk yang <strong>tidak laku?</strong></p>
+                </div>
+                <div class="gd-card">
+                    <div class="gd-card-icon">💬</div>
+                    <h4>Dengar Masukan</h4>
+                    <p>Perhatikan saran dan keluhan dari pembeli untuk meningkatkan kualitas dan pelayanan produk.</p>
+                </div>
+                <div class="gd-card">
+                    <div class="gd-card-icon">💰</div>
+                    <h4>Kesesuaian Harga</h4>
+                    <p>Evaluasi: <strong>apakah harga sudah sesuai</strong> dengan pasar? Lakukan penyesuaian jika perlu.</p>
+                </div>
+            </div>
+            <div class="gd-tips" style="background:#fdf4ff; border-color:#fbcfe8;">
+                <div class="gd-tips-icon">📋</div>
+                <div class="gd-tips-content">
+                    <h4 style="color:#86198f;">Tips Konsistensi:</h4>
+                    <ul class="gd-list" style="margin-top:0.5rem; margin-bottom:1rem;">
+                        <li>Buat jadwal posting promosi rutin.</li>
+                        <li>Kelola keuangan dengan pencatatan yang rapi.</li>
+                        <li>Terus belajar hal baru (lihat Pusat Pembelajaran kami).</li>
+                        <li>Jangan mudah menyerah di bulan-bulan pertama!</li>
+                    </ul>
+                    <p style="font-style:italic; font-weight:600; color:#a21caf;">"Usaha yang konsisten, sekecil apa pun, akan selalu lebih baik daripada rencana besar yang hanya disimpan."</p>
+                </div>
+            </div>`
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let step = parseInt(urlParams.get('step')) || 1;
+        if(step < 1) step = 1;
+        if(step > 5) step = 5;
+
+        // Update UI Elements
+        document.getElementById('bcStep').textContent = 'Step ' + step;
+        document.getElementById('stepContent').innerHTML = stepData[step - 1];
+
+        // Progress Bar Update
+        for(let i = 1; i <= 5; i++) {
+            const p = document.getElementById('p' + i);
+            if(i < step) p.className = 'gd-step completed';
+            else if(i === step) p.className = 'gd-step active';
+            else p.className = 'gd-step';
+        }
+
+        // Navigation Setup
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+
+        if(step === 1) {
+            btnPrev.innerHTML = '← Kembali ke Guide';
+            btnPrev.onclick = () => window.location.href = 'starter-guide.html';
+        } else {
+            btnPrev.innerHTML = '← Kembali ke Step ' + (step - 1);
+            btnPrev.onclick = () => window.location.href = '?step=' + (step - 1);
+        }
+
+        if(step === 5) {
+            btnNext.className = 'btn btn-primary';
+            btnNext.style.background = '#27ae60';
+            btnNext.innerHTML = 'Selesai & Mulai Usaha! 🚀';
+            btnNext.onclick = () => window.location.href = 'index.html';
+        } else {
+            btnNext.innerHTML = 'Lanjut ke Step ' + (step + 1) + ' →';
+            btnNext.onclick = () => window.location.href = '?step=' + (step + 1);
+        }
+    </script>
+</body>
+</html>

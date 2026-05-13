@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Seminar - Admin UMKM Starter Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar"></div>
+        <main class="admin-main">
+            <div id="adminHeader"></div>
+            <div class="admin-content">
+                <div class="admin-page-header">
+                    <h3>🎓 Kelola Seminar & Webinar</h3>
+                </div>
+
+                <div class="config-section" style="margin-bottom: 2rem; background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <h4 style="margin-bottom: 1rem;">🖼️ Pengaturan Toolbar/Banner Seminar</h4>
+                    <div class="form-group">
+                        <label class="form-label">Teks Info Banner</label>
+                        <input type="text" class="form-control" id="cfgToolbarText" placeholder="Contoh: Ikuti Mega Seminar Nasional UMKM!">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL Foto Pamflet Utama</label>
+                        <input type="url" class="form-control" id="cfgToolbarImage" placeholder="https://example.com/banner.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Link Aksi (Opsional)</label>
+                        <input type="url" class="form-control" id="cfgToolbarLink" placeholder="https://daftar.link/...">
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="saveToolbarConfig()">💾 Simpan Toolbar</button>
+                </div>
+
+                <div class="admin-page-header" style="margin-top: 2rem;">
+                    <h3>Daftar Event</h3>
+                    <button class="btn btn-primary" onclick="openModal()">+ Tambah Event</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>No</th><th>Pamflet</th><th>Judul</th><th>Tipe</th><th>Tanggal</th><th>Waktu</th><th>Aksi</th></tr></thead>
+                        <tbody id="seminarTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Event</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <form onsubmit="saveSeminar(event)">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label class="form-label">Judul Event</label>
+                    <input type="text" class="form-control" id="sTitle" required placeholder="Judul seminar/webinar">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipe</label>
+                    <select class="form-control" id="sType"><option>Online</option><option>Offline</option></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" class="form-control" id="sDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Waktu</label>
+                    <input type="text" class="form-control" id="sTime" required placeholder="09:00 - 12:00 WIB">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="sDesc" rows="3" placeholder="Deskripsi event"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Foto Pamflet</label>
+                    <div id="pamfletUploadArea" style="border: 2px dashed var(--neutral-300); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--neutral-50);" onclick="document.getElementById('sPamfletFile').click()" ondragover="event.preventDefault(); this.style.borderColor='var(--primary-color)'; this.style.background='var(--primary-50)';" ondragleave="this.style.borderColor='var(--neutral-300)'; this.style.background='var(--neutral-50)';" ondrop="handlePamfletDrop(event)">
+                        <div id="pamfletPlaceholder">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🖼️</div>
+                            <p style="margin: 0; color: var(--neutral-500); font-size: 0.9rem;">Klik atau seret gambar pamflet ke sini</p>
+                            <p style="margin: 0.25rem 0 0; color: var(--neutral-400); font-size: 0.8rem;">Format: JPG, PNG, WebP (Maks. 2MB)</p>
+                        </div>
+                        <div id="pamfletPreviewContainer" style="display: none;">
+                            <img id="pamfletPreview" src="" alt="Preview Pamflet" style="max-width: 100%; max-height: 200px; border-radius: var(--radius-md); object-fit: contain; box-shadow: var(--shadow-sm);">
+                            <p style="margin: 0.5rem 0 0; color: var(--neutral-500); font-size: 0.8rem;">Klik untuk mengganti gambar</p>
+                        </div>
+                    </div>
+                    <input type="file" id="sPamfletFile" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="handlePamfletSelect(this)">
+                    <button type="button" id="btnRemovePamflet" class="btn btn-sm" style="margin-top: 0.5rem; display: none; color: var(--color-danger); border: 1px solid var(--color-danger); background: transparent;" onclick="removePamflet(event)">🗑️ Hapus Gambar</button>
+                    <input type="hidden" id="sPamflet">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Link Pendaftaran</label>
+                    <input type="url" class="form-control" id="sLink" placeholder="https://forms.gle/... atau url website">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script>
+        if (!checkAuth()) throw 'Not authenticated';
+        document.getElementById('sidebar').innerHTML = renderSidebar('seminar');
+        document.getElementById('adminHeader').innerHTML = renderAdminHeader('Kelola Seminar');
+
+        function loadTable() {
+            const seminars = DB.get('seminars') || [];
+            document.getElementById('seminarTable').innerHTML = seminars.map((s, i) => {
+                const pamfletThumb = s.pamflet 
+                    ? `<img src="${s.pamflet}" alt="Pamflet" style="width:50px;height:50px;object-fit:cover;border-radius:var(--radius-md);box-shadow:var(--shadow-sm);">` 
+                    : `<div style="width:50px;height:50px;background:var(--neutral-100);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--neutral-400);font-size:1.2rem;">🖼️</div>`;
+                return `<tr>
+                <td>${i + 1}</td>
+                <td>${pamfletThumb}</td>
+                <td><strong>${s.title}</strong><br><small style="color:var(--neutral-500)">${s.desc || ''}</small></td>
+                <td><span class="badge ${s.type === 'Online' ? 'badge-success' : 'badge-danger'}">${s.type}</span></td>
+                <td>${formatDate(s.date)}</td>
+                <td>${s.time}</td>
+                <td>
+                    <div class="flex gap-1">
+                        <button class="btn btn-sm btn-secondary" onclick="editSeminar('${s.id}')">✏️ Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteSeminar('${s.id}')">🗑️</button>
+                    </div>
+                </td>
+            </tr>`;
+            }).join('');
+        }
+
+        function openModal(id) {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = id ? 'Edit Event' : 'Tambah Event';
+            if (!id) {
+                document.getElementById('editId').value = '';
+                document.querySelector('#modalOverlay form').reset();
+                resetPamfletUpload();
+            }
+        }
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+        function loadToolbarConfig() {
+            const c = DB.get('seminarToolbar') || {};
+            document.getElementById('cfgToolbarText').value = c.text || '';
+            document.getElementById('cfgToolbarImage').value = c.image || '';
+            document.getElementById('cfgToolbarLink').value = c.link || '';
+        }
+
+        function saveToolbarConfig() {
+            const c = {
+                text: document.getElementById('cfgToolbarText').value,
+                image: document.getElementById('cfgToolbarImage').value,
+                link: document.getElementById('cfgToolbarLink').value
+            };
+            DB.set('seminarToolbar', c);
+            showToast('Toolbar seminar berhasil disimpan!');
+        }
+
+        function editSeminar(id) {
+            const seminars = DB.get('seminars') || [];
+            const s = seminars.find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('editId').value = s.id;
+            document.getElementById('sTitle').value = s.title;
+            document.getElementById('sType').value = s.type;
+            document.getElementById('sDate').value = s.date;
+            document.getElementById('sTime').value = s.time;
+            document.getElementById('sDesc').value = s.desc || '';
+            document.getElementById('sPamflet').value = s.pamflet || '';
+            document.getElementById('sLink').value = s.linkDaftar || '';
+            if (s.pamflet) {
+                showPamfletPreview(s.pamflet);
+            } else {
+                resetPamfletUpload();
+            }
+            openModal(id);
+        }
+
+        // ---- Pamflet file upload helpers ----
+        let pendingPamfletBase64 = null;
+
+        function handlePamfletSelect(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) { showToast('Ukuran file melebihi 2MB!', 'error'); input.value = ''; return; }
+            fileToBase64(file).then(base64 => {
+                pendingPamfletBase64 = base64;
+                document.getElementById('sPamflet').value = base64;
+                showPamfletPreview(base64);
+            });
+        }
+
+        function handlePamfletDrop(e) {
+            e.preventDefault();
+            const area = document.getElementById('pamfletUploadArea');
+            area.style.borderColor = 'var(--neutral-300)';
+            area.style.background = 'var(--neutral-50)';
+            const file = e.dataTransfer.files[0];
+            if (!file || !file.type.startsWith('image/')) { showToast('File harus berupa gambar!', 'error'); return; }
+            if (file.size > 2 * 1024 * 1024) { showToast('Ukuran file melebihi 2MB!', 'error'); return; }
+            fileToBase64(file).then(base64 => {
+                pendingPamfletBase64 = base64;
+                document.getElementById('sPamflet').value = base64;
+                showPamfletPreview(base64);
+            });
+        }
+
+        function showPamfletPreview(src) {
+            document.getElementById('pamfletPlaceholder').style.display = 'none';
+            document.getElementById('pamfletPreviewContainer').style.display = 'block';
+            document.getElementById('pamfletPreview').src = src;
+            document.getElementById('btnRemovePamflet').style.display = 'inline-flex';
+        }
+
+        function resetPamfletUpload() {
+            pendingPamfletBase64 = null;
+            document.getElementById('sPamflet').value = '';
+            document.getElementById('sPamfletFile').value = '';
+            document.getElementById('pamfletPlaceholder').style.display = 'block';
+            document.getElementById('pamfletPreviewContainer').style.display = 'none';
+            document.getElementById('pamfletPreview').src = '';
+            document.getElementById('btnRemovePamflet').style.display = 'none';
+        }
+
+        function removePamflet(e) {
+            e.stopPropagation();
+            resetPamfletUpload();
+        }
+
+        function saveSeminar(e) {
+            e.preventDefault();
+            const seminars = DB.get('seminars') || [];
+            const editId = document.getElementById('editId').value;
+            const data = {
+                id: editId || genId(),
+                title: document.getElementById('sTitle').value,
+                type: document.getElementById('sType').value,
+                date: document.getElementById('sDate').value,
+                time: document.getElementById('sTime').value,
+                desc: document.getElementById('sDesc').value,
+                pamflet: document.getElementById('sPamflet').value,
+                linkDaftar: document.getElementById('sLink').value
+            };
+            if (editId) { const idx = seminars.findIndex(x => x.id === editId); if (idx >= 0) seminars[idx] = data; }
+            else { seminars.push(data); }
+            DB.set('seminars', seminars);
+            closeModal(); loadTable();
+            showToast(editId ? 'Event berhasil diperbarui!' : 'Event berhasil ditambahkan!');
+        }
+
+        function deleteSeminar(id) {
+            if (!confirm('Hapus event ini?')) return;
+            DB.set('seminars', (DB.get('seminars') || []).filter(x => x.id !== id));
+            loadTable();
+            showToast('Event berhasil dihapus!', 'error');
+        }
+        loadToolbarConfig();
+        loadTable();
+    </script>
+</body>
+</html>

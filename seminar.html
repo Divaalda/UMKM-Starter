@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seminar & Webinar - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <section class="page-header">
+        <div class="container">
+            <div>
+                <h1>Seminar & Webinar</h1>
+                <p>Tingkatkan kemampuan usahamu lewat seminar pilihan.</p>
+            </div>
+            <div class="page-header-icon">🎓</div>
+        </div>
+    </section>
+    <div id="seminarToolbarContainer" class="container"
+        style="margin-top: -2rem; margin-bottom: 2rem; position: relative; z-index: 10;"></div>
+    <section class="seminar-section">
+        <div class="container">
+            <div class="seminar-grid" id="seminarGrid"></div>
+        </div>
+    </section>
+    <div id="footer"></div>
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('navbar').innerHTML = renderNavbar('seminar');
+        document.getElementById('footer').innerHTML = renderFooter();
+        const seminars = DB.get('seminars') || [];
+        const semColors = { 'Online': { bg: '#d4edda', color: '#155724' }, 'Offline': { bg: '#f8d7da', color: '#721c24' } };
+
+        const tbConfig = DB.get('seminarToolbar');
+        if (tbConfig && (tbConfig.text || tbConfig.image)) {
+            let innerHtml = '';
+            if (tbConfig.image) {
+                innerHtml += `<img src="${tbConfig.image}" alt="Pamflet Utama" style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); display: block; max-height: 400px; object-fit: cover;">`;
+            }
+            if (tbConfig.text || tbConfig.link) {
+                innerHtml += `<div style="background: var(--primary-color); color: white; padding: 1rem 1.5rem; border-radius: ${tbConfig.image ? '0 0 var(--radius-lg) var(--radius-lg)' : 'var(--radius-lg)'}; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: var(--shadow-md); margin-top: ${tbConfig.image ? '-10px' : '0'}; position: relative;">
+                    <div style="font-weight: 600; font-size: 1.1rem;">${tbConfig.text || 'Info Seminar Terbaru'}</div>
+                    ${tbConfig.link ? `<a href="${tbConfig.link}" target="_blank" class="btn btn-outline" style="border-color: white; color: white;">Selengkapnya</a>` : ''}
+                </div>`;
+            }
+            document.getElementById('seminarToolbarContainer').innerHTML = innerHtml;
+        }
+
+        document.getElementById('seminarGrid').innerHTML = seminars.map(s => {
+            const sc = semColors[s.type] || semColors['Online'];
+            const catColor = s.type === 'Online' ? '#27ae60' : '#e74c3c';
+            const pamfletContent = s.pamflet
+                ? `<div style="width: 100%; height: 100%; background: url('${s.pamflet}') center/cover no-repeat;"></div>`
+                : (s.type === 'Online' ? '💻' : '🏢');
+
+            const btnLink = s.linkDaftar ? s.linkDaftar : '#';
+            const btnTarget = s.linkDaftar ? 'target="_blank"' : '';
+            const btnClick = !s.linkDaftar ? 'onclick="alert(\'Pendaftaran berhasil! 🎉\'); return false;"' : '';
+
+            return `
+            <div class="card seminar-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
+                <div class="seminar-image" style="background:linear-gradient(135deg,${catColor}22,${catColor}11);display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;">
+                    ${pamfletContent}
+                    <span class="badge seminar-badge" style="background:${sc.bg};color:${sc.color};position:absolute;top:12px;left:12px;z-index:2;">${s.type}</span>
+                </div>
+                <div class="seminar-body" style="flex:1;display:flex;flex-direction:column;">
+                    <h4 style="margin-bottom:auto;">${s.title}</h4>
+                    <div class="seminar-meta" style="margin-top:1rem;margin-bottom:1rem;">
+                        <span>📅 ${formatDate(s.date)}</span>
+                        <span>🕐 ${s.time}</span>
+                    </div>
+                    <a href="${btnLink}" ${btnTarget} ${btnClick} class="btn btn-outline btn-sm" style="width:100%;text-align:center;">Daftar Sekarang</a>
+                </div>
+            </div>`;
+        }).join('');
+    </script>
+</body>
+
+</html>

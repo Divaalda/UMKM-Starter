@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin UMKM Starter Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <div id="sidebar"></div>
+        <main class="admin-main">
+            <div id="adminHeader"></div>
+            <div class="admin-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon green">📦</div>
+                        <div class="stat-info">
+                            <h3 id="statProducts">0</h3>
+                            <p>Total Produk</p>
+                            <div class="stat-trend up">↑ Aktif</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">🎓</div>
+                        <div class="stat-info">
+                            <h3 id="statSeminars">0</h3>
+                            <p>Total Seminar</p>
+                            <div class="stat-trend up">↑ Aktif</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">👥</div>
+                        <div class="stat-info">
+                            <h3 id="statVisitors">0</h3>
+                            <p>Total Pengunjung</p>
+                            <div class="stat-trend up">↑ 12% bulan ini</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">📧</div>
+                        <div class="stat-info">
+                            <h3 id="statSubs">0</h3>
+                            <p>Newsletter Subs</p>
+                            <div class="stat-trend up">↑ Bertambah</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Charts -->
+                <div class="chart-section">
+                    <div class="chart-card">
+                        <h4>📈 Statistik Pengunjung (12 Bulan Terakhir)</h4>
+                        <canvas id="visitorChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h4>🕐 Aktivitas Terbaru</h4>
+                        <ul class="activity-list" id="activityList"></ul>
+                    </div>
+                </div>
+                <!-- Quick Stats Table -->
+                <div class="chart-card">
+                    <h4>📊 Ringkasan Produk per Kategori</h4>
+                    <div class="table-wrapper" style="box-shadow:none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th>Jumlah Produk</th>
+                                    <th>Rata-rata Harga</th>
+                                    <th>Rata-rata Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="chart-card" style="margin-top: 1.5rem;">
+                    <h4>👥 Daftar Pengguna Terbaru</h4>
+                    <div class="table-wrapper" style="box-shadow:none;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email / No HP</th>
+                                    <th>Tanggal Daftar</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/app.js"></script>
+    <script>
+        if (!checkAuth()) throw 'Not authenticated';
+        document.getElementById('sidebar').innerHTML = renderSidebar('dashboard');
+        document.getElementById('adminHeader').innerHTML = renderAdminHeader('Dashboard');
+
+        const products = DB.get('products') || [];
+        const seminars = DB.get('seminars') || [];
+        const stats = DB.get('stats') || {};
+        const activities = DB.get('activities') || [];
+
+        document.getElementById('statProducts').textContent = products.length;
+        document.getElementById('statSeminars').textContent = seminars.length;
+        document.getElementById('statVisitors').textContent = (stats.visitors || 0).toLocaleString();
+        document.getElementById('statSubs').textContent = stats.subscribers || 0;
+
+        // Activity list
+        document.getElementById('activityList').innerHTML = activities.map(a =>
+            `<li class="activity-item"><div class="activity-dot ${a.type}"></div><div><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div></div></li>`
+        ).join('');
+
+        // Category table
+        const cats = {};
+        products.forEach(p => {
+            if (!cats[p.category]) cats[p.category] = { count: 0, totalPrice: 0, totalRating: 0 };
+            cats[p.category].count++;
+            cats[p.category].totalPrice += p.price;
+            cats[p.category].totalRating += p.rating;
+        });
+        document.getElementById('categoryTable').innerHTML = Object.entries(cats).map(([cat, d]) =>
+            `<tr><td><span class="badge badge-primary">${cat}</span></td><td>${d.count}</td><td>${formatRupiah(Math.round(d.totalPrice / d.count))}</td><td>⭐ ${(d.totalRating / d.count).toFixed(1)}</td></tr>`
+        ).join('');
+
+        // Users table
+        const users = DB.get('users') || [];
+        document.getElementById('usersTable').innerHTML = users.length > 0 ? users.slice().reverse().slice(0, 10).map(u => {
+            const dateStr = u.createdAt ? formatDate(u.createdAt) : '-';
+            return `<tr>
+                <td><strong>${u.username}</strong></td>
+                <td>${u.contact}</td>
+                <td>${dateStr}</td>
+                <td><span class="badge ${u.role === 'admin' ? 'badge-danger' : 'badge-primary'}">${u.role}</span></td>
+            </tr>`;
+        }).join('') : `<tr><td colspan="4" style="text-align:center;color:var(--neutral-500);">Belum ada pengguna terdaftar</td></tr>`;
+
+        // Visitor Chart
+        const ctx = document.getElementById('visitorChart').getContext('2d');
+        const history = stats.visitorHistory || [320, 450, 380, 520, 610, 580, 720, 890, 750, 940, 1100, 1250];
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'Jan', 'Feb', 'Mar', 'Apr'],
+                datasets: [{
+                    label: 'Pengunjung',
+                    data: history,
+                    borderColor: '#357120',
+                    backgroundColor: 'rgba(53,113,32,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#357120',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

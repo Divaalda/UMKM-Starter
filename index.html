@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="UMKM Starter Hub - Platform pendamping UMKM pemula untuk memulai usaha dengan lebih mudah.">
+    <title>UMKM Starter Hub - Mulai Usaha UMKM dari Nol</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="heroSection">
+        <div class="container">
+            <div class="hero-text">
+                <div class="hero-badge" id="heroBadge">🌱 Pendamping UMKM Pemula</div>
+                <h1 id="heroTitle">Mulai Usaha <span>UMKM</span> dari Nol, Gak Pake Ribet!</h1>
+                <p class="hero-desc" id="heroSubtitle">Panduan langkah demi langkah, inspirasi produk, hingga kalkulator
+                    harga jual untuk bantu kamu mulai dan mengembangkan usaha.</p>
+                <a href="starter-guide.html" class="btn btn-accent btn-lg" id="heroCta">Mulai Sekarang →</a>
+            </div>
+            <div class="hero-image">
+                <img src="person.png" alt="UMKM Starter Hub"
+                    style="width: 100%; max-width: 460px; object-fit: contain;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Fitur Untuk Kamu</h2>
+            </div>
+            <div class="features-grid">
+                <div class="card feature-card">
+                    <div class="feature-icon">📖</div>
+                    <h4>Starter Guide</h4>
+                    <p>Panduan lengkap mulai usaha dalam 5 langkah sederhana.</p>
+                    <a href="starter-guide.html" class="btn btn-secondary btn-sm">Lihat Guide</a>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon">🧮</div>
+                    <h4>Kalkulator Harga</h4>
+                    <p>Hitung harga jual dengan mudah dan tepat.</p>
+                    <a href="kalkulator.html" class="btn btn-secondary btn-sm">Hitung Sekarang</a>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon">🛍️</div>
+                    <h4>Produk UMKM</h4>
+                    <p>Temukan inspirasi dari berbagai produk UMKM.</p>
+                    <a href="produk.html" class="btn btn-secondary btn-sm">Lihat Produk</a>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon">📑</div>
+                    <h4>Template Keuangan</h4>
+                    <p>Unduh template Excel untuk pembukuan dan keuangan.</p>
+                    <a href="template-keuangan.html" class="btn btn-secondary btn-sm">Lihat Template</a>
+                </div>
+                <div class="card feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h4>Pusat Pembelajaran</h4>
+                    <p>Video, modul ajar, dan kuis untuk UMKM.</p>
+                    <a href="pembelajaran.html" class="btn btn-secondary btn-sm">Mulai Belajar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <div class="products-header">
+                <h2>Produk Terbaru</h2>
+                <a href="produk.html">Lihat Semua →</a>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="ctaSection">
+        <div class="container">
+            <div class="cta-banner">
+                <div class="cta-icon">📝</div>
+                <div class="cta-content">
+                    <h2 id="ctaTitle">Siap Mulai Usaha?</h2>
+                    <p id="ctaDesc">Ikuti panduan starter guide dan wujudkan usahamu sekarang juga!</p>
+                    <a href="starter-guide.html" class="btn btn-lg" id="ctaCta">Mulai Guide</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Render shared components
+        document.getElementById('navbar').innerHTML = renderNavbar('home');
+        document.getElementById('footer').innerHTML = renderFooter();
+
+        // Load config
+        const config = DB.get('config') || {};
+        if (config.heroTitle) document.getElementById('heroTitle').innerHTML = config.heroTitle.replace('UMKM', '<span>UMKM</span>');
+        if (config.heroSubtitle) document.getElementById('heroSubtitle').textContent = config.heroSubtitle;
+        if (config.heroCta) document.getElementById('heroCta').textContent = config.heroCta + ' →';
+        if (config.ctaTitle) document.getElementById('ctaTitle').textContent = config.ctaTitle;
+        if (config.ctaDesc) document.getElementById('ctaDesc').textContent = config.ctaDesc;
+        if (config.ctaCta) document.getElementById('ctaCta').textContent = config.ctaCta;
+
+        // Load products (first 3)
+        const products = DB.get('products') || [];
+        const grid = document.getElementById('productsGrid');
+        grid.innerHTML = products.slice(0, 3).map(p => renderProductCard(p)).join('');
+
+        // Track visitor
+        const stats = DB.get('stats') || {};
+        stats.visitors = (stats.visitors || 0) + 1;
+        stats.pageViews = (stats.pageViews || 0) + 1;
+        DB.set('stats', stats);
+    </script>
+</body>
+
+</html>

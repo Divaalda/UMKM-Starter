@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Template Keuangan - Admin UMKM Starter Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar"></div>
+        <main class="admin-main">
+            <div id="adminHeader"></div>
+            <div class="admin-content">
+                <div class="admin-page-header">
+                    <h3>📑 Daftar Template Keuangan</h3>
+                    <button class="btn btn-primary" onclick="openModal()">+ Tambah Template</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>No</th><th>Judul Template</th><th>Kategori</th><th>File Excel</th><th>Aksi</th></tr></thead>
+                        <tbody id="templateTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Template</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <form onsubmit="saveTemplate(event)">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label class="form-label">Judul Template</label>
+                    <input type="text" class="form-control" id="tTitle" required placeholder="Contoh: Laporan Laba Rugi">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kategori</label>
+                    <select class="form-control" id="tCategory">
+                        <option>Laporan Keuangan</option><option>Arus Kas</option><option>Pembukuan</option><option>Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="tDesc" rows="3" required placeholder="Deskripsi template ini untuk apa..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">File Excel (.xlsx)</label>
+                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('tFileInput').click()">
+                        <input type="file" id="tFileInput" accept=".xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display:none" onchange="handleFileUpload(event)">
+                        <div id="uploadPlaceholder">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--neutral-500);">Klik untuk upload file Excel</p>
+                        </div>
+                        <div id="uploadPreview" style="display:none; flex-direction: column; align-items: center;">
+                            <div style="font-size: 2.5rem; color: #27ae60;">📄</div>
+                            <p id="uploadFileName" style="margin-top: 0.5rem; font-weight: 500;"></p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="tFileData">
+                    <input type="hidden" id="tFileName">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script>
+        if (!checkAuth()) throw 'Not authenticated';
+        document.getElementById('sidebar').innerHTML = renderSidebar('template');
+        document.getElementById('adminHeader').innerHTML = renderAdminHeader('Kelola Template Keuangan');
+
+        function loadTable() {
+            const templates = DB.get('templates') || [];
+            document.getElementById('templateTable').innerHTML = templates.map((t, i) => `<tr>
+                <td>${i + 1}</td>
+                <td><strong>${t.title}</strong><br><small style="color:var(--neutral-500)">${t.desc || ''}</small></td>
+                <td><span class="badge badge-primary">${t.category}</span></td>
+                <td>${t.fileName ? `<span style="color:#27ae60;font-weight:500;">📄 ${t.fileName}</span>` : '<span style="color:red">Belum ada file</span>'}</td>
+                <td>
+                    <div class="flex gap-1">
+                        <button class="btn btn-sm btn-secondary" onclick="editTemplate('${t.id}')">✏️ Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTemplate('${t.id}')">🗑️</button>
+                    </div>
+                </td>
+            </tr>`).join('');
+        }
+
+        function resetUploadArea() {
+            document.getElementById('tFileInput').value = '';
+            document.getElementById('tFileData').value = '';
+            document.getElementById('tFileName').value = '';
+            document.getElementById('uploadPlaceholder').style.display = 'block';
+            document.getElementById('uploadPreview').style.display = 'none';
+        }
+
+        async function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const base64 = await fileToBase64(file);
+                document.getElementById('tFileData').value = base64;
+                document.getElementById('tFileName').value = file.name;
+                document.getElementById('uploadFileName').textContent = file.name;
+                document.getElementById('uploadPreview').style.display = 'flex';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+            } catch (err) {
+                showToast('Gagal memproses file', 'error');
+            }
+        }
+
+        function openModal(id) {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = id ? 'Edit Template' : 'Tambah Template';
+            if (!id) { 
+                document.getElementById('editId').value = ''; 
+                document.querySelector('#modalOverlay form').reset(); 
+                resetUploadArea();
+            }
+        }
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+        function editTemplate(id) {
+            const templates = DB.get('templates') || [];
+            const t = templates.find(x => x.id === id);
+            if (!t) return;
+            document.getElementById('editId').value = t.id;
+            document.getElementById('tTitle').value = t.title;
+            document.getElementById('tCategory').value = t.category;
+            document.getElementById('tDesc').value = t.desc || '';
+            
+            resetUploadArea();
+            if (t.fileName) {
+                document.getElementById('tFileData').value = t.file || '';
+                document.getElementById('tFileName').value = t.fileName;
+                document.getElementById('uploadFileName').textContent = t.fileName;
+                document.getElementById('uploadPreview').style.display = 'flex';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+            }
+            openModal(id);
+        }
+
+        function saveTemplate(e) {
+            e.preventDefault();
+            const templates = DB.get('templates') || [];
+            const editId = document.getElementById('editId').value;
+            const data = {
+                id: editId || genId(),
+                title: document.getElementById('tTitle').value,
+                category: document.getElementById('tCategory').value,
+                desc: document.getElementById('tDesc').value,
+                file: document.getElementById('tFileData').value,
+                fileName: document.getElementById('tFileName').value
+            };
+            if (!data.fileName) {
+                alert('Silakan upload file Excel terlebih dahulu!');
+                return;
+            }
+            if (editId) { 
+                const idx = templates.findIndex(x => x.id === editId); 
+                if (idx >= 0) templates[idx] = data; 
+            } else { 
+                templates.push(data); 
+            }
+            DB.set('templates', templates);
+            closeModal(); loadTable();
+            showToast(editId ? 'Template diperbarui!' : 'Template ditambahkan!');
+        }
+
+        function deleteTemplate(id) {
+            if (!confirm('Hapus template ini?')) return;
+            DB.set('templates', (DB.get('templates') || []).filter(x => x.id !== id));
+            loadTable();
+            showToast('Template dihapus!', 'error');
+        }
+        
+        loadTable();
+    </script>
+</body>
+</html>

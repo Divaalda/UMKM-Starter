@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Produk - Admin UMKM Starter Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar"></div>
+        <main class="admin-main">
+            <div id="adminHeader"></div>
+            <div class="admin-content">
+                <div class="admin-page-header">
+                    <h3>📦 Daftar Produk</h3>
+                    <button class="btn btn-primary" onclick="openModal()">+ Tambah Produk</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>No</th><th>Gambar</th><th>Nama Produk</th><th>Kategori</th><th>Harga</th><th>Rating</th><th>Aksi</th></tr></thead>
+                        <tbody id="productTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Produk</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <form onsubmit="saveProduct(event)">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label class="form-label">Nama Produk</label>
+                    <input type="text" class="form-control" id="pName" required placeholder="Nama produk">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kategori</label>
+                    <select class="form-control" id="pCategory">
+                        <option>Makanan</option><option>Minuman</option><option>Fashion</option><option>Kerajinan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Harga (Rp)</label>
+                    <input type="number" class="form-control" id="pPrice" required placeholder="15000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rating (1-5)</label>
+                    <input type="number" class="form-control" id="pRating" step="0.1" min="1" max="5" value="4.5" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="pDesc" rows="3" placeholder="Deskripsi produk"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Foto Produk</label>
+                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('pFileInput').click()">
+                        <input type="file" id="pFileInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+                        <div id="uploadPlaceholder">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--neutral-500);">Klik untuk upload foto</p>
+                        </div>
+                        <img id="uploadPreview" src="" style="display:none; max-width: 100%; max-height: 150px; border-radius: var(--radius-md);">
+                    </div>
+                    <input type="hidden" id="pImageData">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script>
+        if (!checkAuth()) throw 'Not authenticated';
+        document.getElementById('sidebar').innerHTML = renderSidebar('produk');
+        document.getElementById('adminHeader').innerHTML = renderAdminHeader('Kelola Produk');
+
+        function loadTable() {
+            const products = DB.get('products') || [];
+            document.getElementById('productTable').innerHTML = products.map((p, i) => {
+                const emoji = getProductEmoji(p.category);
+                const catColor = getCatColor(p.category);
+                return `<tr>
+                    <td>${i + 1}</td>
+                    <td><div class="table-img" style="background:${catColor}22;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">${p.image ? `<img src="${p.image}" class="table-img">` : emoji}</div></td>
+                    <td><strong>${p.name}</strong><br><small style="color:var(--neutral-500)">${p.desc || ''}</small></td>
+                    <td><span class="badge badge-primary">${p.category}</span></td>
+                    <td>${formatRupiah(p.price)}</td>
+                    <td>⭐ ${p.rating}</td>
+                    <td>
+                        <div class="flex gap-1">
+                            <button class="btn btn-sm btn-secondary" onclick="editProduct('${p.id}')">✏️ Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}')">🗑️</button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function resetUploadArea() {
+            document.getElementById('pFileInput').value = '';
+            document.getElementById('pImageData').value = '';
+            document.getElementById('uploadPlaceholder').style.display = 'block';
+            document.getElementById('uploadPreview').style.display = 'none';
+            document.getElementById('uploadPreview').src = '';
+        }
+
+        async function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const base64 = await fileToBase64(file);
+                document.getElementById('pImageData').value = base64;
+                document.getElementById('uploadPreview').src = base64;
+                document.getElementById('uploadPreview').style.display = 'block';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+            } catch (err) {
+                showToast('Gagal memproses gambar', 'error');
+            }
+        }
+
+        function openModal(id) {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = id ? 'Edit Produk' : 'Tambah Produk';
+            if (!id) { 
+                document.getElementById('editId').value = ''; 
+                document.querySelector('#modalOverlay form').reset(); 
+                resetUploadArea();
+            }
+        }
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+        function editProduct(id) {
+            const products = DB.get('products') || [];
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('editId').value = p.id;
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pCategory').value = p.category;
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pRating').value = p.rating;
+            document.getElementById('pDesc').value = p.desc || '';
+            
+            resetUploadArea();
+            if (p.image) {
+                document.getElementById('pImageData').value = p.image;
+                document.getElementById('uploadPreview').src = p.image;
+                document.getElementById('uploadPreview').style.display = 'block';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+            }
+            openModal(id);
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const products = DB.get('products') || [];
+            const editId = document.getElementById('editId').value;
+            const data = {
+                id: editId || genId(),
+                name: document.getElementById('pName').value,
+                category: document.getElementById('pCategory').value,
+                price: parseFloat(document.getElementById('pPrice').value),
+                rating: parseFloat(document.getElementById('pRating').value),
+                desc: document.getElementById('pDesc').value,
+                image: document.getElementById('pImageData').value,
+                color: getCatColor(document.getElementById('pCategory').value)
+            };
+            if (editId) {
+                const idx = products.findIndex(x => x.id === editId);
+                if (idx >= 0) products[idx] = data;
+            } else {
+                products.push(data);
+            }
+            DB.set('products', products);
+            closeModal();
+            loadTable();
+            showToast(editId ? 'Produk berhasil diperbarui!' : 'Produk berhasil ditambahkan!');
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('Hapus produk ini?')) return;
+            let products = DB.get('products') || [];
+            products = products.filter(x => x.id !== id);
+            DB.set('products', products);
+            loadTable();
+            showToast('Produk berhasil dihapus!', 'error');
+        }
+
+        loadTable();
+    </script>
+</body>
+</html>

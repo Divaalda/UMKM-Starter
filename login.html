@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="login-card"
+            style="max-width: 440px; width: 100%; padding: 3rem 2.5rem; background: #fff; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);">
+            <div class="logo" style="margin-bottom: 2rem; text-align: center;">
+                <img src="LOGO.png" alt="UMKM Starter Hub"
+                    style="height: 48px; object-fit: contain; margin: 0 auto 1.5rem;">
+                <h2 style="font-size: 1.5rem; color: var(--neutral-900);">Selamat Datang Kembali</h2>
+            </div>
+
+            <div class="login-error" id="loginError"
+                style="display: none; background: var(--color-danger); color: white; padding: 0.75rem; border-radius: var(--radius-md); margin-bottom: 1rem; text-align: center; font-size: 0.85rem;">
+                Akun tidak ditemukan atau password salah!</div>
+
+            <form id="loginForm" onsubmit="return false;">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="form-label"
+                        style="font-weight: 600; color: var(--neutral-800); margin-bottom: 0.5rem; display: block; text-align: left;">Email
+                        atau Nomor Telepon</label>
+                    <input type="text" class="form-control" id="username" placeholder="Masukkan email / no. hp" required
+                        style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--neutral-200); border-radius: var(--radius-md); font-size: 0.95rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label class="form-label"
+                        style="font-weight: 600; color: var(--neutral-800); margin-bottom: 0.5rem; display: block; text-align: left;">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Masukkan password" required
+                        style="width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--neutral-200); border-radius: var(--radius-md); font-size: 0.95rem;">
+                </div>
+
+                <button type="button" class="btn btn-primary btn-lg"
+                    style="width:100%; margin-top:0.5rem; background-color: #2b4e33; border-color: #2b4e33; padding: 0.85rem; font-weight: 600; font-size: 0.95rem; border-radius: var(--radius-md);"
+                    onclick="doLogin('user')">Masuk sebagai Pengguna</button>
+
+                <button type="button" class="btn btn-outline btn-lg"
+                    style="width:100%; margin-top:1rem; border: 2px solid #2b4e33; color: #2b4e33; padding: 0.85rem; font-weight: 600; font-size: 0.95rem; border-radius: var(--radius-md);"
+                    onclick="doLogin('admin')">Masuk sebagai Admin</button>
+            </form>
+
+            <p style="text-align:center; margin-top:2rem; font-size:0.9rem; color: var(--neutral-600);">
+                Belum punya akun? <a href="daftar.html" style="color: #2b4e33; font-weight: 700;">Daftar sekarang</a>
+            </p>
+
+            <p style="text-align:center; margin-top:1rem; font-size:0.9rem;">
+                <a href="index.html" style="color: var(--neutral-600); font-weight: 500;">← Kembali ke Beranda</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Check if already logged in as admin
+        if (DB.get('auth') && DB.get('auth').role === 'admin') {
+            window.location.href = 'admin/dashboard.html';
+        }
+
+        function doLogin(role) {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const errorEl = document.getElementById('loginError');
+
+            if (!u || !p) {
+                errorEl.textContent = 'Mohon isi email/nomor telepon dan password!';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (role === 'admin') {
+                if ((u === 'admin' || u === 'admin@umkm.id') && p === 'admin123') {
+                    DB.set('auth', { username: u, role: 'admin', loggedIn: Date.now() });
+                    window.location.href = 'admin/dashboard.html';
+                } else {
+                    errorEl.textContent = 'Kredensial admin salah!';
+                    errorEl.style.display = 'block';
+                }
+            } else {
+                // Login as User
+                DB.set('auth', { username: u, role: 'user', loggedIn: Date.now() });
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

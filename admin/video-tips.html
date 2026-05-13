@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Video Tips - Admin UMKM Starter Hub</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <div id="sidebar"></div>
+        <main class="admin-main">
+            <div id="adminHeader"></div>
+            <div class="admin-content">
+                <div class="admin-page-header">
+                    <h3>🎬 Daftar Video Tips</h3>
+                    <button class="btn btn-primary" onclick="openModal()">+ Tambah Video</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>No</th><th>Judul Video</th><th>URL YouTube</th><th>Aksi</th></tr></thead>
+                        <tbody id="videoTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Video</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <form onsubmit="saveVideo(event)">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label class="form-label">Judul Video</label>
+                    <input type="text" class="form-control" id="vTitle" required placeholder="Contoh: Tips Foto Produk">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">URL YouTube</label>
+                    <input type="url" class="form-control" id="vUrl" required placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deskripsi Singkat</label>
+                    <textarea class="form-control" id="vDesc" rows="3" required placeholder="Deskripsi video..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script>
+        if (!checkAuth()) throw 'Not authenticated';
+        document.getElementById('sidebar').innerHTML = renderSidebar('video');
+        document.getElementById('adminHeader').innerHTML = renderAdminHeader('Kelola Video Tips');
+
+        function loadTable() {
+            const videos = DB.get('videos') || [];
+            document.getElementById('videoTable').innerHTML = videos.map((v, i) => `<tr>
+                <td>${i + 1}</td>
+                <td><strong>${v.title}</strong><br><small style="color:var(--neutral-500)">${v.desc || ''}</small></td>
+                <td><a href="${v.url}" target="_blank" style="color:var(--primary-600); text-decoration:underline;">${v.url}</a></td>
+                <td>
+                    <div class="flex gap-1">
+                        <button class="btn btn-sm btn-secondary" onclick="editVideo('${v.id}')">✏️ Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteVideo('${v.id}')">🗑️</button>
+                    </div>
+                </td>
+            </tr>`).join('');
+        }
+
+        function openModal(id) {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = id ? 'Edit Video' : 'Tambah Video';
+            if (!id) { document.getElementById('editId').value = ''; document.querySelector('#modalOverlay form').reset(); }
+        }
+        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+        function editVideo(id) {
+            const videos = DB.get('videos') || [];
+            const v = videos.find(x => x.id === id);
+            if (!v) return;
+            document.getElementById('editId').value = v.id;
+            document.getElementById('vTitle').value = v.title;
+            document.getElementById('vUrl').value = v.url;
+            document.getElementById('vDesc').value = v.desc || '';
+            openModal(id);
+        }
+
+        function saveVideo(e) {
+            e.preventDefault();
+            const videos = DB.get('videos') || [];
+            const editId = document.getElementById('editId').value;
+            const data = {
+                id: editId || genId(),
+                title: document.getElementById('vTitle').value,
+                url: document.getElementById('vUrl').value,
+                desc: document.getElementById('vDesc').value
+            };
+            if (editId) { 
+                const idx = videos.findIndex(x => x.id === editId); 
+                if (idx >= 0) videos[idx] = data; 
+            } else { 
+                videos.push(data); 
+            }
+            DB.set('videos', videos);
+            closeModal(); loadTable();
+            showToast(editId ? 'Video diperbarui!' : 'Video ditambahkan!');
+        }
+
+        function deleteVideo(id) {
+            if (!confirm('Hapus video ini?')) return;
+            DB.set('videos', (DB.get('videos') || []).filter(x => x.id !== id));
+            loadTable();
+            showToast('Video dihapus!', 'error');
+        }
+        
+        loadTable();
+    </script>
+</body>
+</html>

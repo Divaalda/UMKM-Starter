@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Harga Jual - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+    <div id="navbar"></div>
+    <section class="page-header">
+        <div class="container">
+            <div><h1>Kalkulator Harga Jual</h1><p>Hitung harga jual produkmu dengan mudah.</p></div>
+            <div class="page-header-icon">🧮</div>
+        </div>
+    </section>
+    <section class="calc-section">
+        <div class="container">
+            <div class="calc-grid">
+                <div class="card calc-form">
+                    <div class="form-group">
+                        <label class="form-label">Modal Produksi (Rp)</label>
+                        <input type="number" class="form-control" id="modalProduksi" value="10000" placeholder="Contoh: 10000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Biaya Tambahan (Rp)</label>
+                        <input type="number" class="form-control" id="biayaTambahan" value="2000" placeholder="Contoh: 2000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Keuntungan yang Diinginkan (%)</label>
+                        <input type="number" class="form-control" id="keuntunganPersen" value="30" placeholder="Contoh: 30">
+                    </div>
+                    <button class="btn btn-primary btn-lg" style="width:100%;" onclick="hitungHarga()">Hitung</button>
+                </div>
+                <div class="card calc-result" id="calcResult">
+                    <h4>Harga Jual yang Disarankan</h4>
+                    <div class="calc-result-price" id="resultPrice">Rp 0</div>
+                    <div class="calc-breakdown" id="calcBreakdown">
+                        <p style="font-weight:600;margin-bottom:0.5rem;">Rincian:</p>
+                        <div class="row"><span>Total Modal</span><span id="rModal">-</span></div>
+                        <div class="row"><span>Keuntungan (<span id="rPersen">0</span>%)</span><span id="rProfit">-</span></div>
+                        <div class="row" style="font-weight:700;border-top:1px solid var(--neutral-200);padding-top:0.5rem;margin-top:0.5rem;">
+                            <span>Harga Jual</span><span id="rTotal">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="footer"></div>
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('navbar').innerHTML = renderNavbar('kalkulator');
+        document.getElementById('footer').innerHTML = renderFooter();
+
+        function hitungHarga() {
+            const modal = parseFloat(document.getElementById('modalProduksi').value) || 0;
+            const biaya = parseFloat(document.getElementById('biayaTambahan').value) || 0;
+            const persen = parseFloat(document.getElementById('keuntunganPersen').value) || 0;
+            const totalModal = modal + biaya;
+            const profit = totalModal * (persen / 100);
+            const hargaJual = totalModal + profit;
+            document.getElementById('resultPrice').textContent = formatRupiah(hargaJual);
+            document.getElementById('rModal').textContent = formatRupiah(totalModal);
+            document.getElementById('rPersen').textContent = persen;
+            document.getElementById('rProfit').textContent = formatRupiah(profit);
+            document.getElementById('rTotal').textContent = formatRupiah(hargaJual);
+            document.getElementById('calcResult').style.animation = 'fadeInUp 0.4s ease';
+        }
+        hitungHarga();
+    </script>
+</body>
+</html>

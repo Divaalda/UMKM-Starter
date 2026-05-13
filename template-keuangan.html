@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Keuangan - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <section class="page-header">
+        <div class="container">
+            <div>
+                <h1>Template Keuangan</h1>
+                <p>Unduh berbagai template Excel untuk membantu pencatatan dan pengelolaan keuangan usahamu secara
+                    profesional.</p>
+            </div>
+            <div class="page-header-icon">📑</div>
+        </div>
+    </section>
+
+    <section class="template-section" style="padding: 4rem 0;">
+        <div class="container">
+            <div class="filter-bar" id="filterBar">
+                <button class="filter-btn active" onclick="filterTemplates('all', this)">Semua</button>
+            </div>
+            <div class="products-grid" id="templateGrid"></div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('navbar').innerHTML = renderNavbar('template');
+        document.getElementById('footer').innerHTML = renderFooter();
+
+        const templates = DB.get('templates') || [];
+        const cats = [...new Set(templates.map(t => t.category))];
+        const filterBar = document.getElementById('filterBar');
+
+        cats.forEach(c => {
+            filterBar.innerHTML += `<button class="filter-btn" onclick="filterTemplates('${c}', this)">${c}</button>`;
+        });
+
+        function filterTemplates(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const filtered = cat === 'all' ? templates : templates.filter(t => t.category === cat);
+            const isPrem = isPremiumUser();
+            document.getElementById('templateGrid').innerHTML = filtered.map(t => `
+            <div class="card" style="display:flex; flex-direction:column;">
+                <div style="font-size: 3rem; margin-bottom: 1rem; color: #27ae60;">📊</div>
+                <h4 style="margin-bottom: 0.5rem; font-size: 1.1rem;">${t.title}</h4>
+                <div style="margin-bottom: 1rem;"><span class="badge badge-primary">${t.category}</span></div>
+                <p style="font-size: 0.85rem; color: var(--neutral-600); margin-bottom: 1.5rem; flex: 1;">${t.desc}</p>
+                ${isPrem
+                    ? `<button class="btn btn-primary" style="width: 100%;" onclick="downloadTemplate('${t.id}')">⬇️ Download Excel</button>`
+                    : `<a href="langganan.html" class="btn btn-accent" style="width: 100%;">🔒 Berlangganan Premium</a>`}
+            </div>
+            `).join('');
+        }
+
+        function downloadTemplate(id) {
+            const t = (DB.get('templates') || []).find(x => x.id === id);
+            if (!t) return;
+            if (!t.file) {
+                alert('File Excel belum tersedia untuk template ini.');
+                return;
+            }
+            downloadBase64File(t.file, t.fileName || 'template-keuangan.xlsx');
+            showToast('Download dimulai...');
+        }
+
+        filterTemplates('all', document.querySelector('.filter-btn'));
+    </script>
+</body>
+
+</html>

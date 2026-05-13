@@ -1,0 +1,142 @@
+/* ========================================
+   Landing Page Styles
+   ======================================== */
+
+/* ---- Hero Section ---- */
+.hero { padding: 4rem 0; overflow: hidden; background: linear-gradient(135deg, var(--cream-100) 0%, var(--primary-50) 100%); }
+.hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: var(--primary-50); border: 1px solid var(--primary-200); border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600; color: var(--primary-700); margin-bottom: 1.5rem; }
+.hero h1 { font-size: 3rem; line-height: 1.15; margin-bottom: 1.25rem; color: var(--neutral-900); }
+.hero h1 span { color: var(--primary-600); }
+.hero-desc { font-size: 1.05rem; color: var(--neutral-600); margin-bottom: 2rem; max-width: 480px; }
+.hero-image { display: flex; align-items: center; justify-content: center; }
+.hero-image img { max-height: 420px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); }
+.hero-illustration { width: 100%; max-width: 460px; aspect-ratio: 1; background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-50) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+.hero-illustration::before { content: '🏪'; font-size: 8rem; }
+.hero-illustration::after { content: 'UMKM'; position: absolute; top: 15%; right: 10%; background: var(--primary-500); color: #fff; padding: 0.5rem 1.25rem; border-radius: var(--radius-lg); font-weight: 700; font-size: 1.1rem; animation: pulse 2s ease infinite; }
+
+/* ---- Features Section ---- */
+.features { padding: 5rem 0; }
+.features .section-title { text-align: center; margin-bottom: 3rem; }
+.features .section-title h2 { margin-bottom: 0.75rem; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; justify-content: center; }
+.feature-card { text-align: center; padding: 2.5rem 2rem; }
+.feature-icon { width: 72px; height: 72px; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; background: var(--primary-50); border-radius: var(--radius-xl); font-size: 2rem; border: 2px solid var(--primary-100); }
+.feature-card h4 { margin-bottom: 0.75rem; }
+.feature-card p { font-size: 0.9rem; color: var(--neutral-500); margin-bottom: 1.5rem; }
+
+/* ---- Products Section ---- */
+.products-section { padding: 4rem 0; }
+.products-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+.products-header a { color: var(--primary-600); font-weight: 600; font-size: 0.9rem; transition: color var(--transition-fast); }
+.products-header a:hover { color: var(--primary-800); }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.product-card { background: #fff; border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-md); transition: all var(--transition-base); border: 1px solid rgba(0,0,0,0.04); }
+.product-card:hover { box-shadow: var(--shadow-xl); transform: translateY(-4px); }
+.product-image { height: 200px; position: relative; overflow: hidden; }
+.product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-base); }
+.product-card:hover .product-image img { transform: scale(1.05); }
+.product-info { padding: 1.25rem; }
+.product-info h4 { font-size: 1rem; margin-bottom: 0.5rem; }
+.product-meta { display: flex; align-items: center; justify-content: space-between; }
+.product-price { font-weight: 700; color: var(--primary-700); font-size: 1rem; }
+.product-rating { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; color: var(--neutral-500); }
+.product-rating .star { color: var(--accent-500); }
+
+/* ---- CTA Section ---- */
+.cta-section { padding: 4rem 0; }
+.cta-banner { background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-500) 100%); border-radius: var(--radius-2xl); padding: 3.5rem; display: flex; align-items: center; gap: 3rem; color: #fff; overflow: hidden; position: relative; }
+.cta-banner::before { content: ''; position: absolute; top: -50%; right: -10%; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+.cta-icon { font-size: 5rem; flex-shrink: 0; }
+.cta-content h2 { color: #fff; margin-bottom: 0.75rem; }
+.cta-content p { color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; font-size: 1.05rem; }
+.cta-content .btn { background: #fff; color: var(--primary-700); font-weight: 700; }
+.cta-content .btn:hover { background: var(--cream-100); transform: translateY(-2px); }
+
+/* ---- Starter Guide Page ---- */
+.page-header { padding: 4rem 0 3rem; background: linear-gradient(135deg, var(--cream-100) 0%, var(--primary-50) 100%); }
+.page-header .container { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center; }
+.page-header h1 { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.page-header p { font-size: 1.05rem; color: var(--neutral-600); max-width: 500px; }
+.page-header-icon { font-size: 6rem; }
+.guide-steps { padding: 4rem 0; }
+.steps-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
+.step-card { text-align: center; padding: 2rem 1.25rem; position: relative; cursor: pointer; transition: all 0.3s ease; }
+.step-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--primary-200); }
+.step-number { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--primary-600); color: #fff; border-radius: var(--radius-full); font-weight: 700; font-size: 0.9rem; margin: 0 auto 1rem; }
+.step-icon { width: 64px; height: 64px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; background: var(--primary-50); border-radius: var(--radius-xl); font-size: 1.75rem; }
+.step-card h4 { font-size: 0.95rem; margin-bottom: 0.5rem; }
+.step-card p { font-size: 0.8rem; color: var(--neutral-500); }
+.step-detail { display: none; margin-top: 1rem; text-align: left; }
+.step-detail hr { border: none; border-top: 1px dashed var(--neutral-200); margin-bottom: 1rem; }
+.step-detail p { font-size: 0.85rem; color: var(--neutral-700); line-height: 1.6; margin: 0; }
+.step-card.expanded .step-detail { display: block; animation: fadeIn 0.4s ease; }
+.step-toggle-hint { font-size: 0.7rem; color: var(--primary-500); margin-top: 1.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.3s; }
+.step-toggle-hint::before { content: "Klik untuk detail ▼"; }
+.step-card.expanded .step-toggle-hint::before { content: "Tutup detail ▲"; }
+.step-card.expanded .step-toggle-hint { color: var(--neutral-400); }
+
+/* ---- Calculator Page ---- */
+.calc-section { padding: 4rem 0; }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+.calc-form { padding: 2.5rem; }
+.calc-result { padding: 2.5rem; background: linear-gradient(135deg, var(--primary-50) 0%, #fff 100%); text-align: center; }
+.calc-result-price { font-size: 2.5rem; font-weight: 800; color: var(--primary-700); margin: 1rem 0; }
+.calc-breakdown { text-align: left; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px dashed var(--primary-200); }
+.calc-breakdown .row { display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.9rem; }
+.calc-breakdown .row span:first-child { color: var(--neutral-600); }
+.calc-breakdown .row span:last-child { font-weight: 600; color: var(--neutral-800); }
+
+/* ---- Seminar Page ---- */
+.seminar-section { padding: 4rem 0; }
+.seminar-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+.seminar-card { display: flex; flex-direction: column; overflow: hidden; }
+.seminar-image { height: 180px; position: relative; overflow: hidden; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
+.seminar-image img { width: 100%; height: 100%; object-fit: cover; }
+.seminar-badge { position: absolute; top: 12px; left: 12px; }
+.seminar-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+.seminar-body h4 { margin-bottom: 1rem; font-size: 1.15rem; }
+.seminar-meta { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+.seminar-meta span { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--neutral-500); }
+.seminar-body .btn { margin-top: auto; align-self: flex-start; }
+
+/* ---- Product List Page ---- */
+.produk-page { padding: 4rem 0; }
+.filter-bar { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.filter-btn { padding: 0.5rem 1.25rem; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 500; color: var(--neutral-600); background: #fff; border: 1px solid var(--neutral-200); transition: all var(--transition-base); }
+.filter-btn:hover, .filter-btn.active { background: var(--primary-600); color: #fff; border-color: var(--primary-600); }
+.products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+/* ---- Login Page ---- */
+.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-800) 0%, var(--primary-600) 50%, var(--primary-400) 100%); padding: 2rem; }
+.login-card { background: #fff; border-radius: var(--radius-2xl); padding: 3rem; width: 100%; max-width: 420px; box-shadow: var(--shadow-xl); }
+.login-card .logo { text-align: center; margin-bottom: 2rem; }
+.login-card .logo h2 { font-size: 1.5rem; color: var(--primary-700); }
+.login-card .logo span { font-size: 0.8rem; color: var(--neutral-500); }
+.login-error { background: #f8d7da; color: #721c24; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 1rem; display: none; }
+
+/* ---- Responsive Landing ---- */
+@media (max-width: 1024px) {
+    .products-grid-4 { grid-template-columns: repeat(3, 1fr); }
+    .steps-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+    .hero .container { grid-template-columns: 1fr; text-align: center; }
+    .hero h1 { font-size: 2.25rem; }
+    .hero-desc { margin: 0 auto 2rem; }
+    .hero-image { order: -1; }
+    .hero-illustration { max-width: 280px; margin: 0 auto; }
+    .features-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr 1fr; }
+    .products-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .calc-grid { grid-template-columns: 1fr; }
+    .seminar-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .page-header .container { grid-template-columns: 1fr; text-align: center; }
+    .page-header-icon { display: none; }
+    .cta-banner { flex-direction: column; text-align: center; padding: 2.5rem; }
+}
+@media (max-width: 480px) {
+    .products-grid, .products-grid-4 { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembelajaran UMKM - UMKM Starter Hub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--neutral-200);
+            padding-bottom: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: var(--neutral-500);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-600);
+            background: var(--primary-50);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-600);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -0.6rem;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-600);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .video-card {
+            background: #fff;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 */
+            height: 0;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .modul-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .modul-card {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--neutral-200);
+            transition: all 0.2s ease;
+        }
+
+        .modul-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-300);
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .quiz-card {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(145deg, #fff, var(--cream-50));
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .quiz-card .icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <section class="page-header">
+        <div class="container">
+            <div>
+                <h1>Pusat Pembelajaran</h1>
+                <p>Tingkatkan kapasitas usahamu melalui video tips inspiratif, modul ajar komprehensif, dan uji
+                    pemahaman lewat kuis interaktif.</p>
+            </div>
+            <div class="page-header-icon">🎓</div>
+        </div>
+    </section>
+
+    <section class="learning-section" style="padding: 4rem 0;">
+        <div class="container">
+            <div class="tabs" id="learningTabs">
+                <button class="tab-btn active" onclick="switchTab('videos')">🎬 Video Tips</button>
+                <button class="tab-btn" onclick="switchTab('modules')">📚 Modul Ajar</button>
+                <button class="tab-btn" onclick="switchTab('quizzes')">❓ Soal Quizizz</button>
+            </div>
+
+            <!-- Tab: Video Tips -->
+            <div id="tab-videos" class="tab-content active">
+                <div class="video-grid" id="videoGrid"></div>
+            </div>
+
+            <!-- Tab: Modul Ajar -->
+            <div id="tab-modules" class="tab-content">
+                <div class="modul-grid" id="modulGrid"></div>
+            </div>
+
+            <!-- Tab: Quizizz -->
+            <div id="tab-quizzes" class="tab-content">
+                <div class="quiz-grid" id="quizGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('navbar').innerHTML = renderNavbar('pembelajaran');
+        document.getElementById('footer').innerHTML = renderFooter();
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if (btn) btn.classList.add('active');
+
+            const tabContent = document.getElementById('tab-' + tabId);
+            if (tabContent) tabContent.classList.add('active');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.replace('#', '');
+            if (['videos', 'modules', 'quizzes'].includes(hash)) {
+                switchTab(hash);
+            }
+        });
+
+        const isPrem = isPremiumUser();
+
+        function getYoutubeId(url) {
+            const patterns = [/youtube\.com\/watch\?v=([^&\s]+)/, /youtu\.be\/([^?\s]+)/, /youtube\.com\/embed\/([^?\s]+)/];
+            for (const p of patterns) { const m = url?.match(p); if (m) return m[1]; }
+            return null;
+        }
+
+        window.playVideo = function (id, url) {
+            document.getElementById('vw-' + id).innerHTML = `<iframe src="${url}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"></iframe>`;
+            document.getElementById('vw-' + id).onclick = null;
+            document.getElementById('vw-' + id).style.cursor = 'default';
+        };
+
+        // Render Videos
+        const videos = DB.get('videos') || [];
+        document.getElementById('videoGrid').innerHTML = videos.map(v => {
+            const yId = getYoutubeId(v.url);
+            const thumbUrl = yId ? `https://img.youtube.com/vi/${yId}/hqdefault.jpg` : '';
+            const bgStyle = thumbUrl ? `background: url('${thumbUrl}') center/cover;` : `background:var(--neutral-100);`;
+
+            if (isPrem) {
+                const embedUrl = getYouTubeEmbedUrl(v.url);
+                return `
+                <div class="video-card">
+                    <div class="video-wrapper" id="vw-${v.id}" style="${bgStyle} position:relative; cursor:pointer;" onclick="playVideo('${v.id}', '${embedUrl}')">
+                        <div style="position:absolute; inset:0; background:rgba(0,0,0,0.1); z-index:1; transition:background 0.2s;" onmouseover="this.style.background='rgba(0,0,0,0.3)'; this.nextElementSibling.style.transform='translate(-50%, -50%) scale(1.1)';" onmouseout="this.style.background='rgba(0,0,0,0.1)'; this.nextElementSibling.style.transform='translate(-50%, -50%) scale(1)';"></div>
+                        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:60px; height:60px; background:#e74c3c; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.5rem; box-shadow:0 4px 15px rgba(0,0,0,0.4); z-index:2; transition:transform 0.2s;">
+                            ▶
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h4 style="margin-bottom:0.5rem;">${v.title}</h4>
+                        <p style="font-size:0.85rem;color:var(--neutral-600);">${v.desc}</p>
+                    </div>
+                </div>`;
+            } else {
+                const yId = getYoutubeId(v.url);
+                const thumbUrl = yId ? `https://img.youtube.com/vi/${yId}/hqdefault.jpg` : '';
+                const bgStyle = thumbUrl ? `background: url('${thumbUrl}') center/cover;` : `background:var(--neutral-100);`;
+
+                return `
+                <div class="video-card">
+                    <div class="video-wrapper" style="${bgStyle} position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff;">
+                        <div style="position:absolute; inset:0; background:rgba(0,0,0,0.6); z-index:1;"></div>
+                        <div style="position:relative; z-index:2; text-align:center;">
+                            <div style="font-size:3rem; margin-bottom:0.5rem; text-shadow:0 2px 4px rgba(0,0,0,0.5);">🔒</div>
+                            <div style="font-size:0.9rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; text-shadow:0 2px 4px rgba(0,0,0,0.5);">Video Premium</div>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h4 style="margin-bottom:0.5rem;">${v.title}</h4>
+                        <p style="font-size:0.85rem;color:var(--neutral-600); margin-bottom:1rem;">${v.desc}</p>
+                        <a href="langganan.html" class="btn btn-accent" style="width:100%;">💎 Buka Akses Video</a>
+                    </div>
+                </div>`;
+            }
+        }).join('');
+
+        // Render Modules
+        const modules = DB.get('modules') || [];
+        document.getElementById('modulGrid').innerHTML = modules.map(m => `
+        <div class="modul-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+                <div style="font-size: 2.5rem; color: #e74c3c;">📕</div>
+                <span class="badge badge-primary">${m.category}</span>
+            </div>
+            <h4 style="margin-bottom:0.5rem;">${m.title}</h4>
+            <p style="font-size:0.85rem;color:var(--neutral-600); flex:1; margin-bottom:1.5rem;">${m.desc}</p>
+            ${isPrem
+                ? `<button class="btn btn-outline" style="width:100%;" onclick="downloadModul('${m.id}')">⬇️ Download PDF</button>`
+                : `<a href="langganan.html" class="btn btn-accent" style="width:100%;">🔒 Berlangganan Premium</a>`}
+        </div>`).join('');
+
+        function downloadModul(id) {
+            const m = (DB.get('modules') || []).find(x => x.id === id);
+            if (!m) return;
+            if (!m.file) {
+                alert('File Modul PDF belum tersedia.');
+                return;
+            }
+            downloadBase64File(m.file, m.fileName || 'modul-ajar.pdf');
+            showToast('Download dimulai...');
+        }
+
+        // Render Quizzes
+        const quizzes = DB.get('quizzes') || [];
+        document.getElementById('quizGrid').innerHTML = quizzes.map(q => {
+            let badgeClass = 'badge-success';
+            if (q.difficulty === 'Menengah') badgeClass = 'badge-warning';
+            if (q.difficulty === 'Sulit') badgeClass = 'badge-danger';
+
+            return `
+            <div class="quiz-card">
+                <div class="icon">🎯</div>
+                <h4 style="margin-bottom:0.5rem;">${q.title}</h4>
+                <div style="margin-bottom:1rem;"><span class="badge ${badgeClass}">${q.difficulty}</span></div>
+                <p style="font-size:0.85rem;color:var(--neutral-600); flex:1; margin-bottom:1.5rem;">${q.desc}</p>
+                ${isPrem
+                    ? `<a href="${q.link}" target="_blank" class="btn btn-outline" style="width:100%; border-color:var(--primary-600); color:var(--primary-600);">Mulai Kuis 🚀</a>`
+                    : `<a href="langganan.html" class="btn btn-accent" style="width:100%;">🔒 Buka Akses Kuis</a>`}
+            </div>`;
+        }).join('');
+    </script>
+</body>
+
+</html>
