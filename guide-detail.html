@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,78 +8,319 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/landing.css">
     <style>
-        .gd-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-        .gd-breadcrumb { font-size: 0.85rem; color: var(--neutral-500); margin-bottom: 2rem; }
-        .gd-breadcrumb a { color: var(--primary-600); text-decoration: none; }
-        .gd-breadcrumb a:hover { text-decoration: underline; }
-        
+        .gd-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .gd-breadcrumb {
+            font-size: 0.85rem;
+            color: var(--neutral-500);
+            margin-bottom: 2rem;
+        }
+
+        .gd-breadcrumb a {
+            color: var(--primary-600);
+            text-decoration: none;
+        }
+
+        .gd-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
         /* Progress Bar */
-        .gd-progress { display: flex; align-items: center; justify-content: space-between; position: relative; margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .gd-progress::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--neutral-200); z-index: 1; transform: translateY(-50%); }
-        .gd-step { width: 36px; height: 36px; border-radius: 50%; background: var(--neutral-200); color: var(--neutral-600); display: flex; align-items: center; justify-content: center; font-weight: 700; position: relative; z-index: 2; transition: all 0.3s; }
-        .gd-step.active { background: var(--accent-400); color: #fff; transform: scale(1.2); box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.2); }
-        .gd-step.completed { background: var(--primary-500); color: #fff; }
-        
+        .gd-progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gd-progress::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--neutral-200);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .gd-step {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--neutral-200);
+            color: var(--neutral-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+
+        .gd-step.active {
+            background: var(--accent-400);
+            color: #fff;
+            transform: scale(1.2);
+            box-shadow: 0 0 0 4px rgba(240, 180, 41, 0.2);
+        }
+
+        .gd-step.completed {
+            background: var(--primary-500);
+            color: #fff;
+        }
+
         /* Header Area */
-        .gd-header { display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 3rem; }
-        .gd-header-text { flex: 1; }
-        .gd-step-badge { display: inline-block; padding: 0.3rem 1rem; background: var(--primary-100); color: var(--primary-800); border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 1rem; }
-        .gd-title { font-size: 2.5rem; margin-bottom: 1rem; color: var(--neutral-900); }
-        .gd-desc { font-size: 1.1rem; color: var(--neutral-600); line-height: 1.6; }
-        .gd-illustration-emoji { font-size: 8rem; line-height: 1; text-align: center; }
-        
+        .gd-header {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+        }
+
+        .gd-header-text {
+            flex: 1;
+        }
+
+        .gd-step-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--primary-100);
+            color: var(--primary-800);
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .gd-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-900);
+        }
+
+        .gd-desc {
+            font-size: 1.1rem;
+            color: var(--neutral-600);
+            line-height: 1.6;
+        }
+
+        .gd-illustration-emoji {
+            font-size: 8rem;
+            line-height: 1;
+            text-align: center;
+        }
+
         /* Content Boxes */
-        .gd-box { background: var(--cream-50); border: 1px solid var(--neutral-200); border-radius: var(--radius-xl); padding: 2rem; margin-bottom: 2rem; }
-        .gd-box-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 700; color: var(--primary-800); }
-        .gd-box-icon { font-size: 2rem; }
-        
-        .gd-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        .gd-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-        
-        .gd-card { background: #fff; border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.04); }
-        .gd-card-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .gd-card h4 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--neutral-800); }
-        .gd-card p { font-size: 0.85rem; color: var(--neutral-600); line-height: 1.6; }
-        
+        .gd-box {
+            background: var(--cream-50);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .gd-box-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-800);
+        }
+
+        .gd-box-icon {
+            font-size: 2rem;
+        }
+
+        .gd-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .gd-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .gd-card {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .gd-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .gd-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--neutral-800);
+        }
+
+        .gd-card p {
+            font-size: 0.85rem;
+            color: var(--neutral-600);
+            line-height: 1.6;
+        }
+
         /* Specific layouts */
-        .gd-list { margin-left: 1.5rem; }
-        .gd-list li { margin-bottom: 0.75rem; font-size: 0.95rem; }
-        .gd-list li strong { color: var(--primary-700); }
-        
-        .gd-formula { display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin: 2rem 0; text-align: center; border: 1px solid var(--neutral-100); }
-        .gd-formula-item { flex: 1; }
-        .gd-formula-title { font-weight: 700; font-size: 1.1rem; color: var(--primary-800); margin-bottom: 0.5rem; }
-        .gd-formula-desc { font-size: 0.8rem; color: var(--neutral-500); }
-        .gd-formula-op { font-size: 1.5rem; font-weight: 800; color: var(--neutral-400); width: 40px; }
-        .gd-formula-result { background: var(--accent-50); padding: 1rem; border-radius: var(--radius-md); border: 2px solid var(--accent-400); }
-        
-        .gd-tips { display: flex; gap: 1.5rem; align-items: flex-start; background: var(--accent-50); border: 1px solid var(--accent-200); border-radius: var(--radius-xl); padding: 1.5rem; margin-top: 3rem; }
-        .gd-tips-icon { font-size: 2.5rem; }
-        .gd-tips-content h4 { color: var(--accent-700); margin-bottom: 0.5rem; }
-        .gd-tips-content p { font-size: 0.95rem; margin: 0; line-height: 1.6; }
-        
+        .gd-list {
+            margin-left: 1.5rem;
+        }
+
+        .gd-list li {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .gd-list li strong {
+            color: var(--primary-700);
+        }
+
+        .gd-formula {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid var(--neutral-100);
+        }
+
+        .gd-formula-item {
+            flex: 1;
+        }
+
+        .gd-formula-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .gd-formula-desc {
+            font-size: 0.8rem;
+            color: var(--neutral-500);
+        }
+
+        .gd-formula-op {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--neutral-400);
+            width: 40px;
+        }
+
+        .gd-formula-result {
+            background: var(--accent-50);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--accent-400);
+        }
+
+        .gd-tips {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            background: var(--accent-50);
+            border: 1px solid var(--accent-200);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .gd-tips-icon {
+            font-size: 2.5rem;
+        }
+
+        .gd-tips-content h4 {
+            color: var(--accent-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .gd-tips-content p {
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.6;
+        }
+
         /* Navigation Buttons */
-        .gd-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--neutral-200); }
-        
+        .gd-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--neutral-200);
+        }
+
         @media(max-width: 768px) {
-            .gd-header { flex-direction: column; text-align: center; }
-            .gd-illustration-emoji { margin: 0 auto; }
-            .gd-grid-3, .gd-grid-4 { grid-template-columns: 1fr; }
-            .gd-formula { flex-direction: column; gap: 1rem; }
-            .gd-formula-op { transform: rotate(90deg); margin: 0 auto; }
-            .gd-nav { flex-direction: column-reverse; gap: 1rem; }
-            .gd-nav button { width: 100%; }
+            .gd-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .gd-illustration-emoji {
+                margin: 0 auto;
+            }
+
+            .gd-grid-3,
+            .gd-grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .gd-formula {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .gd-formula-op {
+                transform: rotate(90deg);
+                margin: 0 auto;
+            }
+
+            .gd-nav {
+                flex-direction: column-reverse;
+                gap: 1rem;
+            }
+
+            .gd-nav button {
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="navbar"></div>
-    
+
     <div class="gd-container">
         <div class="gd-breadcrumb">
             <a href="starter-guide.html">Starter Guide</a> &gt; <span id="bcStep">Step 1</span>
         </div>
-        
+
         <div class="gd-progress" id="progressBar">
             <div class="gd-step" id="p1">1</div>
             <div class="gd-step" id="p2">2</div>
@@ -86,9 +328,9 @@
             <div class="gd-step" id="p4">4</div>
             <div class="gd-step" id="p5">5</div>
         </div>
-        
+
         <div id="stepContent"></div>
-        
+
         <div class="gd-nav">
             <button class="btn btn-outline" id="btnPrev">← Kembali</button>
             <button class="btn btn-primary" id="btnNext">Lanjut ke Step 2 →</button>
@@ -351,18 +593,18 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         let step = parseInt(urlParams.get('step')) || 1;
-        if(step < 1) step = 1;
-        if(step > 5) step = 5;
+        if (step < 1) step = 1;
+        if (step > 5) step = 5;
 
         // Update UI Elements
         document.getElementById('bcStep').textContent = 'Step ' + step;
         document.getElementById('stepContent').innerHTML = stepData[step - 1];
 
         // Progress Bar Update
-        for(let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 5; i++) {
             const p = document.getElementById('p' + i);
-            if(i < step) p.className = 'gd-step completed';
-            else if(i === step) p.className = 'gd-step active';
+            if (i < step) p.className = 'gd-step completed';
+            else if (i === step) p.className = 'gd-step active';
             else p.className = 'gd-step';
         }
 
@@ -370,7 +612,7 @@
         const btnPrev = document.getElementById('btnPrev');
         const btnNext = document.getElementById('btnNext');
 
-        if(step === 1) {
+        if (step === 1) {
             btnPrev.innerHTML = '← Kembali ke Guide';
             btnPrev.onclick = () => window.location.href = 'starter-guide.html';
         } else {
@@ -378,7 +620,7 @@
             btnPrev.onclick = () => window.location.href = '?step=' + (step - 1);
         }
 
-        if(step === 5) {
+        if (step === 5) {
             btnNext.className = 'btn btn-primary';
             btnNext.style.background = '#27ae60';
             btnNext.innerHTML = 'Selesai & Mulai Usaha! 🚀';
@@ -389,4 +631,5 @@
         }
     </script>
 </body>
+
 </html>
