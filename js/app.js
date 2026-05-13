@@ -37,7 +37,9 @@ function fileToBase64(file) {
     });
 }
 function downloadBase64File(base64, filename) {
-    const a = document.createElement('a'); a.href = base64; a.download = filename;
+    let url = base64;
+    if (url.startsWith('files/') && window.location.pathname.includes('/admin/')) { url = '../' + url; }
+    const a = document.createElement('a'); a.href = url; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 function getYouTubeEmbedUrl(url) {
@@ -49,8 +51,8 @@ function getYouTubeEmbedUrl(url) {
 
 /* ---- Seed Data ---- */
 function initSeedData() {
-    if (DB.get('init_v7')) return;
-    if (!DB.get('initialized') || !DB.get('init_v7')) {
+    if (DB.get('init_v8')) return;
+    if (!DB.get('initialized') || !DB.get('init_v8')) {
         DB.set('config', { siteName: 'UMKM Starter Hub', tagline: 'Starter Hub', heroTitle: 'Mulai Usaha UMKM dari Nol, Gak Pake Ribet!', heroSubtitle: 'Panduan langkah demi langkah, inspirasi produk, hingga kalkulator harga jual untuk bantu kamu mulai dan mengembangkan usaha.', heroCta: 'Mulai Sekarang', ctaTitle: 'Siap Mulai Usaha?', ctaDesc: 'Ikuti panduan starter guide dan wujudkan usahamu sekarang juga!', ctaCta: 'Mulai Guide', footerDesc: 'Platform pendamping UMKM pemula untuk memulai usaha dengan lebih mudah.', socialIG: '#', socialYT: '#', socialWA: '#' });
         DB.set('products', [
             { id: 'p1', name: 'Keripik Pisang Cokelat', category: 'Makanan', price: 15000, rating: 4.8, desc: 'Keripik Pisang dengan lapisan cokelat premium', image: 'images/produk-keripik.jpg', color: '#e74c3c' },
@@ -93,39 +95,30 @@ function initSeedData() {
         ]);
         DB.set('initialized', true);
     }
-    const dummyExcel = 'data:text/csv;base64,VGFuZ2dhbCxLZXRlcmFuZ2FuLFBlbWFzdWthbixQZW5nZWx1YXJhbgoyMDI1LTAxLTAxLE1vZGFsIEF3YWwsMTAwMDAwMCwwCg==';
-    const dummyPdf = 'data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iaiA8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4gZW5kb2JqCjIgMCBvYmogPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4gZW5kb2JqCjMgMCBvYmogPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAyMDAgMjAwXSA+PiBlbmRvYmoKeHJlZgowIDQKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNjAgMDAwMDAgbiAKMDAwMDAwMDExOSAwMDAwMCBuIAp0cmFpbGVyIDw8IC9TaXplIDQgL1Jvb3QgMSAwIFIgPj4Kc3RhcnR4cmVmCjE3MwolJUVPRgo=';
+    DB.set('templates', [
+        { id: 't1', title: 'Template Keuangan UMKM', category: 'Laporan Keuangan', desc: 'Template Excel untuk mencatat pendapatan dan pengeluaran usaha.', fileName: 'template keuangan.xlsx', file: 'files/template keuangan.xlsx' }
+    ]);
+    DB.set('videos', [
+        { id: 'v1', title: 'Tips Foto Produk Pakai HP', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara memotret produk dengan smartphone agar terlihat profesional.' },
+        { id: 'v2', title: 'Strategi Marketing di Media Sosial', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara efektif memasarkan produk UMKM di Instagram, TikTok.' },
+        { id: 'v3', title: 'Cara Menentukan Harga Jual', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Tutorial menghitung HPP dan margin keuntungan yang ideal.' }
+    ]);
+    DB.set('modules', [
+        { id: 'm1', title: 'Modul Pemasaran Digital', category: 'Marketing', desc: 'Panduan lengkap strategi pemasaran digital.', fileName: 'Modul Pemasaran Digital.pdf', file: 'files/Modul Pemasaran Digital.pdf' },
+        { id: 'm2', title: 'Modul Kewirausahaan', category: 'Dasar', desc: 'Langkah awal membangun mental wirausaha.', fileName: 'Modul Kewirausahaan.pdf', file: 'files/Modul Kewirausahaan.pdf' },
+        { id: 'm3', title: 'Modul Branding Produk', category: 'Branding', desc: 'Cara membangun identitas brand yang kuat.', fileName: 'branding produk.pdf', file: 'files/branding produk.pdf' },
+        { id: 'm4', title: 'Modul Pencatatan Keuangan', category: 'Keuangan', desc: 'Dasar-dasar akuntansi dan pencatatan kas.', fileName: 'Pencatatan Keuangan.pdf', file: 'files/Pencatatan Keuangan.pdf' }
+    ]);
+    DB.set('quizzes', [
+        { id: 'q1', title: 'Quiz: Dasar-Dasar UMKM', link: 'https://quizizz.com', desc: 'Uji pemahaman tentang konsep dasar UMKM.', difficulty: 'Mudah' },
+        { id: 'q2', title: 'Quiz: Strategi Marketing', link: 'https://quizizz.com', desc: 'Test pengetahuan tentang strategi pemasaran.', difficulty: 'Menengah' },
+        { id: 'q3', title: 'Quiz: Manajemen Keuangan', link: 'https://quizizz.com', desc: 'Latihan soal pengelolaan keuangan UMKM.', difficulty: 'Sulit' }
+    ]);
 
-    if (!DB.get('templates')) {
-        DB.set('templates', [
-            { id: 't1', title: 'Template Laporan Laba Rugi', category: 'Laporan Keuangan', desc: 'Template Excel untuk mencatat pendapatan dan pengeluaran usaha.', fileName: 'laporan-laba-rugi.csv', file: dummyExcel },
-            { id: 't2', title: 'Template Arus Kas Harian', category: 'Arus Kas', desc: 'Catat arus kas masuk dan keluar harian usahamu.', fileName: 'arus-kas-harian.csv', file: dummyExcel },
-            { id: 't3', title: 'Template Pembukuan Sederhana', category: 'Pembukuan', desc: 'Template pembukuan dasar untuk UMKM pemula.', fileName: 'pembukuan-sederhana.csv', file: dummyExcel }
-        ]);
-    }
-    if (!DB.get('videos')) {
-        DB.set('videos', [
-            { id: 'v1', title: 'Tips Foto Produk Pakai HP', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara memotret produk dengan smartphone agar terlihat profesional.' },
-            { id: 'v2', title: 'Strategi Marketing di Media Sosial', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara efektif memasarkan produk UMKM di Instagram, TikTok.' },
-            { id: 'v3', title: 'Cara Menentukan Harga Jual', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Tutorial menghitung HPP dan margin keuntungan yang ideal.' }
-        ]);
-    }
-    if (!DB.get('modules')) {
-        DB.set('modules', [
-            { id: 'm1', title: 'Modul Dasar Kewirausahaan', category: 'Dasar', desc: 'Modul lengkap tentang dasar-dasar memulai usaha.', fileName: 'modul-kewirausahaan.pdf', file: dummyPdf },
-            { id: 'm2', title: 'Modul Digital Marketing', category: 'Marketing', desc: 'Panduan pemasaran digital untuk pelaku UMKM.', fileName: 'modul-digital-marketing.pdf', file: dummyPdf },
-            { id: 'm3', title: 'Modul Manajemen Keuangan', category: 'Keuangan', desc: 'Cara mengelola keuangan usaha agar tetap sehat.', fileName: 'modul-keuangan.pdf', file: dummyPdf }
-        ]);
-    }
-    if (!DB.get('quizzes')) {
-        DB.set('quizzes', [
-            { id: 'q1', title: 'Quiz: Dasar-Dasar UMKM', link: 'https://quizizz.com', desc: 'Uji pemahaman tentang konsep dasar UMKM.', difficulty: 'Mudah' },
-            { id: 'q2', title: 'Quiz: Strategi Marketing', link: 'https://quizizz.com', desc: 'Test pengetahuan tentang strategi pemasaran.', difficulty: 'Menengah' },
-            { id: 'q3', title: 'Quiz: Manajemen Keuangan', link: 'https://quizizz.com', desc: 'Latihan soal pengelolaan keuangan UMKM.', difficulty: 'Sulit' }
-        ]);
-    }
-    DB.set('init_v7', true);
     DB.set('initialized', true);
+}
+
+DB.set('init_v8', true);
 }
 initSeedData();
 
