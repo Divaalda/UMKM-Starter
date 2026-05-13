@@ -49,27 +49,32 @@ function getYouTubeEmbedUrl(url) {
 
 /* ---- Seed Data ---- */
 function initSeedData() {
-    if (DB.get('init_v5')) return;
-    if (!DB.get('initialized') || !DB.get('init_v5')) {
+    if (DB.get('init_v7')) return;
+    if (!DB.get('initialized') || !DB.get('init_v7')) {
         DB.set('config', { siteName: 'UMKM Starter Hub', tagline: 'Starter Hub', heroTitle: 'Mulai Usaha UMKM dari Nol, Gak Pake Ribet!', heroSubtitle: 'Panduan langkah demi langkah, inspirasi produk, hingga kalkulator harga jual untuk bantu kamu mulai dan mengembangkan usaha.', heroCta: 'Mulai Sekarang', ctaTitle: 'Siap Mulai Usaha?', ctaDesc: 'Ikuti panduan starter guide dan wujudkan usahamu sekarang juga!', ctaCta: 'Mulai Guide', footerDesc: 'Platform pendamping UMKM pemula untuk memulai usaha dengan lebih mudah.', socialIG: '#', socialYT: '#', socialWA: '#' });
         DB.set('products', [
-            { id: 'p1', name: 'Keripik Pisang Cokelat', category: 'Makanan', price: 15000, rating: 4.8, desc: 'Keripik pisang dengan lapisan cokelat premium', image: '', color: '#e74c3c' },
-            { id: 'p2', name: 'Es Kopi Susu Literan', category: 'Minuman', price: 18000, rating: 4.7, desc: 'Kopi susu fresh dalam kemasan 1 liter', image: '', color: '#f39c12' },
-            { id: 'p3', name: 'Totebag Kanvas', category: 'Fashion', price: 35000, rating: 4.9, desc: 'Tas kanvas ramah lingkungan dengan desain unik', image: '', color: '#27ae60' },
-            { id: 'p4', name: 'Sambal Bawang Crispy', category: 'Makanan', price: 25000, rating: 4.6, desc: 'Sambal bawang goreng renyah dan pedas', image: '', color: '#e74c3c' },
-            { id: 'p5', name: 'Lilin Aromaterapi', category: 'Kerajinan', price: 45000, rating: 4.8, desc: 'Lilin wangi handmade dari soy wax', image: '', color: '#9b59b6' },
-            { id: 'p6', name: 'Granola Homemade', category: 'Makanan', price: 30000, rating: 4.5, desc: 'Granola sehat dengan campuran kacang dan buah kering', image: '', color: '#e74c3c' }
+            { id: 'p1', name: 'Keripik Pisang Cokelat', category: 'Makanan', price: 15000, rating: 4.8, desc: 'Keripik Pisang dengan lapisan cokelat premium', image: 'images/produk-keripik.jpg', color: '#e74c3c' },
+            { id: 'p2', name: 'Es Kopi Susu Literan', category: 'Minuman', price: 18000, rating: 4.7, desc: 'Kopi susu fresh dalam kemasan 1 liter', image: 'images/produk-kopi.jpg', color: '#f39c12' },
+            { id: 'p3', name: 'Totebag Kanvas', category: 'Fashion', price: 35000, rating: 4.9, desc: 'Tas kanvas ramah lingkungan dengan desain unik', image: 'images/produk-totebag.jpg', color: '#27ae60' },
+            { id: 'p4', name: 'Sambal Bawang Crispy', category: 'Makanan', price: 25000, rating: 4.6, desc: 'Sambal bawang goreng renyah dan pedas', image: 'images/produk-sambal.jpg', color: '#e74c3c' },
+            { id: 'p5', name: 'Lilin Aromaterapi', category: 'Kerajinan', price: 45000, rating: 4.8, desc: 'Lilin wangi handmade dari soy wax', image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?w=500', color: '#9b59b6' },
+            { id: 'p6', name: 'Granola Homemade', category: 'Makanan', price: 30000, rating: 4.5, desc: 'Granola sehat dengan campuran kacang dan buah kering', image: 'images/produk-granola.jpg', color: '#e74c3c' },
+            { id: 'p7', name: 'Sabun Mandi Organik', category: 'Perawatan', price: 20000, rating: 4.9, desc: 'Sabun natural berbahan dasar minyak kelapa dan zaitun', image: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=500', color: '#1abc9c' },
+            { id: 'p8', name: 'Kaos Sablon Custom', category: 'Fashion', price: 55000, rating: 4.7, desc: 'Kaos katun combed 30s dengan sablon DTF berkualitas', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500', color: '#34495e' },
+            { id: 'p9', name: 'Tanaman Hias Sukulen', category: 'Hobi', price: 15000, rating: 4.8, desc: 'Sukulen mini dalam pot keramik estetik untuk meja kerja', image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=500', color: '#2ecc71' },
+            { id: 'p10', name: 'Jurnal Kulit Aesthetic', category: 'Alat Tulis', price: 40000, rating: 4.9, desc: 'Buku catatan dengan sampul kulit sintetis bergaya vintage', image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=500', color: '#d35400' },
+            { id: 'p11', name: 'Casing HP Resin', category: 'Aksesoris', price: 35000, rating: 4.6, desc: 'Casing HP transparan dengan hiasan bunga kering asli', image: 'https://images.unsplash.com/photo-1586953208448-b95a79203678?w=500', color: '#e67e22' }
         ]);
         DB.set('seminars', [
             { id: 's1', title: 'Cara Jualan Laris di Instagram', type: 'Online', date: '2025-05-20', time: '19:00 - 21:00 WIB', desc: 'Pelajari strategi marketing Instagram untuk UMKM' },
             { id: 's2', title: 'Branding Produk UMKM yang Menarik', type: 'Offline', date: '2025-05-28', time: '09:00 - 12:00 WIB', desc: 'Workshop branding dan packaging produk' },
             { id: 's3', title: 'Mengelola Keuangan UMKM', type: 'Online', date: '2025-06-05', time: '14:00 - 16:00 WIB', desc: 'Tips pencatatan keuangan sederhana untuk usaha kecil' },
             { id: 's4', title: 'Fotografi Produk dengan HP', type: 'Online', date: '2025-06-12', time: '10:00 - 12:00 WIB', desc: 'Teknik foto produk profesional hanya dengan smartphone' },
-            { id: 's5', title: 'Building Authentic Brands in a Competitive Market', type: 'Offline', date: '2026-05-16', time: '08:30 - 11:00 WIB', desc: 'Seminar Bisnis Interaktif bersama Dimas Vandityo (Founder Kalis Donuts). Lokasi: Departemen Ekonomika & Bisnis UGM.', linkDaftar: 'https://docs.google.com/forms/d/e/1FAIpQLSc9xUTbtCMUgl9O3Q3YSBnAz3tWGTyB9Ak6YGx6lWNOp-NMAg/closedform', pamflet: 'images/seminar-1.jpeg' },
+            { id: 's5', title: 'Building Authentic Brands in a Competitive Market', type: 'Offline', date: '2026-05-16', time: '08:30 - 11:00 WIB', desc: 'Seminar Bisnis Interaktif bersama Dimas Vandityo (Founder Kalis Donuts). Lokasi: Departemen Ekonomika & Bisnis UGM.', linkDaftar: 'https://docs.google.com/forms/d/e/1FAIpQLSc9xUTbtCMUgl9O3Q3YSBnAz3tWGTyB9Ak6YGx6lWNOp-NMAg/closedform', pamflet: 'images/seminar-1.jpg' },
             { id: 's6', title: 'Rahasia UMKM Ramai Tanpa Iklan Mahal', type: 'Online', date: '2026-04-23', time: '10:00 - Selesai', desc: 'Strategi kolaborasi komunitas bersama Nizelia Basasya Bilqis dari Rumah BUMN Malang.', linkDaftar: 'https://docs.google.com/forms/d/e/1FAIpQLSfABPX5EDwDPXqtX-Kcu9DHoRoei5ZFwd04OIP_15m_XsypJA/viewform', pamflet: 'images/seminar-2.jpg' },
             { id: 's7', title: 'Bangkitkan Ide Usaha: Kreasi Dimsum Nusantara', type: 'Offline', date: '2026-05-08', time: '09:00 - Selesai', desc: 'Pelatihan bersama Ika Hindun Dewi Zulaikha di Rumah BUMN Malang.', linkDaftar: 'https://docs.google.com/forms/d/e/1FAIpQLSevZ7AkrmG17yFPpEQ4e8zVDXzx0R-5sP2aYwFD9zu1X6L5-Q/closedform', pamflet: 'images/seminar-3.jpg' },
             { id: 's8', title: 'Pelatihan Anyaman Rotan Berbasis Bahan Alam', type: 'Offline', date: '2026-05-07', time: '09:00 - Selesai', desc: 'Kreasi Nusantara Bangkit bersama Misriwati Agustina di Rumah BUMN Malang.', linkDaftar: 'https://bit.ly/KreasiiNusantaraBangkitPelatihanAnyamanRotanBerbasisBahanAlam', pamflet: 'images/seminar-4.jpg' },
-            { id: 's9', title: 'Memahami Pola Keputusan Pembelian Konsumen', type: 'Online', date: '2026-04-27', time: '10:00 - Selesai', desc: 'Pelatihan online via Zoom bersama Rezy Safira dari Rumah BUMN Malang.', linkDaftar: 'https://docs.google.com/forms/d/e/1FAIpQLSc4u8VoEACaOzZi1XDHqVeoz_8QNBOuN3Xjtki_eGPsELbA0g/viewform', pamflet: 'images/seminar-5.jpg' }
+            { id: 's9', title: 'Memahami Pola Keputusan Pembelian Konsumen', type: 'Online', date: '2026-04-27', time: '10:00 - Selesai', desc: 'Pelatihan online via Zoom bersama Rezy Safira dari Rumah BUMN Malang.', linkDaftar: 'https://docs.google.com/forms/d/e/1FAIpQLSc4u8VoEACaOzZi1XDHqVeoz_8QNBOuN3Xjtki_eGPsELbA0g/viewform', pamflet: 'images/seminar-5.jpeg' }
         ]);
         DB.set('guideSteps', [
             { id: 'g1', number: 1, title: 'Tentukan Ide Usaha', desc: 'Temukan ide usaha yang sesuai minat dan peluang.', icon: '💡' },
@@ -119,7 +124,7 @@ function initSeedData() {
             { id: 'q3', title: 'Quiz: Manajemen Keuangan', link: 'https://quizizz.com', desc: 'Latihan soal pengelolaan keuangan UMKM.', difficulty: 'Sulit' }
         ]);
     }
-    DB.set('init_v5', true);
+    DB.set('init_v7', true);
     DB.set('initialized', true);
 }
 initSeedData();
