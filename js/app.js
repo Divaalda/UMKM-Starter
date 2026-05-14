@@ -112,9 +112,10 @@ function initSeedData() {
         ]);
 
         DB.set('videos', [
-            { id: 'v1', title: 'Tips Foto Produk Pakai HP', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara memotret produk dengan smartphone agar terlihat profesional.' },
-            { id: 'v2', title: 'Strategi Marketing di Media Sosial', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara efektif memasarkan produk UMKM di Instagram, TikTok.' },
-            { id: 'v3', title: 'Cara Menentukan Harga Jual', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Tutorial menghitung HPP dan margin keuntungan yang ideal.' }
+            { id: 'v1', title: 'Langkah Mudah Memulai Bisnis Kerajinan Tangan (Handmade)', url: 'https://youtu.be/uS1XBfFBCWU?si=lqaGT7DFPL58BZWw', desc: 'Ingin memulai bisnis dengan modal kecil namun memiliki keuntungan yang besar? Bisnis handmade adalah salah satu ide bisnis yang bisa Anda pilih. Untuk memulai bisnis ini, Anda akan dituntut menjadi lebih kreatif untuk menarik konsumen.' },
+            { id: 'v2', title: 'Cara Bisnis Pakaian Untuk Pemula', url: 'https://youtu.be/xg4lj4IpQXw?si=iNRmzAb3yb3y1V23', desc: 'Kalau Anda mencari peluang bisnis dropship yang mudah dimulai sekarang juga, tentu Anda bisa pelajari cara bisnis pakaian untuk pemula ini. Pakaian adalah salah satu kategori produk fashion yang marketnya sangat besar dan banyak pembelinya karena termasuk salah satu kebutuhan pokok.' },
+            { id: 'v3', title: 'Strategi cerdas untuk meningkatkan Penjualan', url: 'https://youtu.be/UJNQQ3XKszU?si=SiX2vZ43LQOIqpgo', desc: 'Sudah menjalankan strategi ini itu, tapi belum ada hasilnya. Kira-kira apa yang menjadi masalahnya? dari produk bisnis Anda atau justru dari manajemen perusahaan Anda? lalu bagaimana solusinya?.' },
+            { id: 'v4', title: 'Strategi UMKM agar lebih dikenal', url: 'https://youtu.be/FIB42_nrQP0?si=Y-eVUMJnRF4JvEfF', desc: 'Baru merintis bisnis UMKM tapi takut kalah saing dengan produk lain? Untuk bersaing di tengah gempuran bisnis UMKM memang tidak mudah, apalagi jika produk yang kamu jual terbilang umum di pasaran.' }
         ]);
 
         DB.set('modules', [
