@@ -59,8 +59,8 @@ function getYouTubeEmbedUrl(url) {
 
 /* ---- Seed Data ---- */
 function initSeedData() {
-    if (DB.get('init_v12')) return;
-    if (!DB.get('initialized') || !DB.get('init_v12')) {
+    if (DB.get('init_v13')) return;
+    if (!DB.get('initialized') || !DB.get('init_v13')) {
         DB.set('config', { siteName: 'UMKM Starter Hub', tagline: 'Starter Hub', heroTitle: 'Mulai Usaha UMKM dari Nol, Gak Pake Ribet!', heroSubtitle: 'Panduan langkah demi langkah, inspirasi produk, hingga kalkulator harga jual untuk bantu kamu mulai dan mengembangkan usaha.', heroCta: 'Mulai Sekarang', ctaTitle: 'Siap Mulai Usaha?', ctaDesc: 'Ikuti panduan starter guide dan wujudkan usahamu sekarang juga!', ctaCta: 'Mulai Guide', footerDesc: 'Platform pendamping UMKM pemula untuk memulai usaha dengan lebih mudah.', socialIG: '#', socialYT: '#', socialWA: '#' });
         DB.set('products', [
             { id: 'p1', name: 'Keripik Pisang Cokelat', category: 'Makanan', price: 15000, rating: 4.8, desc: 'Keripik Pisang dengan lapisan cokelat premium', image: 'images/produk-keripik.jpg', color: '#e74c3c' },
@@ -133,7 +133,7 @@ function initSeedData() {
         ]);
 
         DB.set('initialized', true);
-        DB.set('init_v12', true);
+        DB.set('init_v13', true);
     }
 }
 initSeedData();
