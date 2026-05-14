@@ -15,7 +15,15 @@ function formatDate(d) {
 }
 function genId() { return Date.now().toString(36) + Math.random().toString(36).substr(2, 5); }
 function checkAuth() { if (!DB.get('auth')) { window.location.href = '../login.html'; return false; } return true; }
-function logout() { DB.remove('auth'); window.location.href = '../login.html'; }
+function logout() {
+    DB.remove('auth');
+    const path = window.location.pathname;
+    if (path.includes('/admin/')) {
+        window.location.href = '../login.html';
+    } else {
+        window.location.href = 'login.html';
+    }
+}
 function isPremiumUser() { return DB.get('premium_user') === true; }
 function setPremiumUser(status) { DB.set('premium_user', status); }
 
@@ -51,8 +59,8 @@ function getYouTubeEmbedUrl(url) {
 
 /* ---- Seed Data ---- */
 function initSeedData() {
-    if (DB.get('init_v8')) return;
-    if (!DB.get('initialized') || !DB.get('init_v8')) {
+    if (DB.get('init_v9')) return;
+    if (!DB.get('initialized') || !DB.get('init_v9')) {
         DB.set('config', { siteName: 'UMKM Starter Hub', tagline: 'Starter Hub', heroTitle: 'Mulai Usaha UMKM dari Nol, Gak Pake Ribet!', heroSubtitle: 'Panduan langkah demi langkah, inspirasi produk, hingga kalkulator harga jual untuk bantu kamu mulai dan mengembangkan usaha.', heroCta: 'Mulai Sekarang', ctaTitle: 'Siap Mulai Usaha?', ctaDesc: 'Ikuti panduan starter guide dan wujudkan usahamu sekarang juga!', ctaCta: 'Mulai Guide', footerDesc: 'Platform pendamping UMKM pemula untuk memulai usaha dengan lebih mudah.', socialIG: '#', socialYT: '#', socialWA: '#' });
         DB.set('products', [
             { id: 'p1', name: 'Keripik Pisang Cokelat', category: 'Makanan', price: 15000, rating: 4.8, desc: 'Keripik Pisang dengan lapisan cokelat premium', image: 'images/produk-keripik.jpg', color: '#e74c3c' },
@@ -93,20 +101,28 @@ function initSeedData() {
             { text: 'Newsletter subscriber baru: user@email.com', time: '1 hari lalu', type: 'green' },
             { text: 'Produk "Totebag Kanvas" diperbarui', time: '2 hari lalu', type: 'blue' }
         ]);
+
+        const dummyExcel = 'data:text/csv;base64,VGFuZ2dhbCxLZXRlcmFuZ2FuLFBlbWFzdWthbixQZW5nZWx1YXJhbgoyMDI1LTAxLTAxLE1vZGFsIEF3YWwsMTAwMDAwMCwwCg==';
+        const dummyPdf = 'data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iaiA8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4gZW5kb2JqCjIgMCBvYmogPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4gZW5kb2JqCjMgMCBvYmogPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAyMDAgMjAwXSA+PiBlbmRvYmoKeHJlZgowIDQKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNjAgMDAwMDAgbiAKMDAwMDAwMDExOSAwMDAwMCBuIAp0cmFpbGVyIDw8IC9TaXplIDQgL1Jvb3QgMSAwIFIgPj4Kc3RhcnR4cmVmCjE3MwolJUVPRgo=';
+
         DB.set('templates', [
-            { id: 't1', title: 'Template Keuangan UMKM', category: 'Laporan Keuangan', desc: 'Template Excel untuk mencatat pendapatan dan pengeluaran usaha.', fileName: 'template keuangan.xlsx', file: 'files/template keuangan.xlsx' }
+            { id: 't1', title: 'Template Laporan Laba Rugi', category: 'Laporan Keuangan', desc: 'Template Excel untuk mencatat pendapatan dan pengeluaran usaha.', fileName: 'laporan-laba-rugi.csv', file: dummyExcel },
+            { id: 't2', title: 'Template Arus Kas Harian', category: 'Arus Kas', desc: 'Catat arus kas masuk dan keluar harian usahamu.', fileName: 'arus-kas-harian.csv', file: dummyExcel },
+            { id: 't3', title: 'Template Pembukuan Sederhana', category: 'Pembukuan', desc: 'Template pembukuan dasar untuk UMKM pemula.', fileName: 'pembukuan-sederhana.csv', file: dummyExcel }
         ]);
+
         DB.set('videos', [
             { id: 'v1', title: 'Tips Foto Produk Pakai HP', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara memotret produk dengan smartphone agar terlihat profesional.' },
             { id: 'v2', title: 'Strategi Marketing di Media Sosial', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Cara efektif memasarkan produk UMKM di Instagram, TikTok.' },
             { id: 'v3', title: 'Cara Menentukan Harga Jual', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', desc: 'Tutorial menghitung HPP dan margin keuntungan yang ideal.' }
         ]);
+
         DB.set('modules', [
-            { id: 'm1', title: 'Modul Pemasaran Digital', category: 'Marketing', desc: 'Panduan lengkap strategi pemasaran digital.', fileName: 'Modul Pemasaran Digital.pdf', file: 'files/Modul Pemasaran Digital.pdf' },
-            { id: 'm2', title: 'Modul Kewirausahaan', category: 'Dasar', desc: 'Langkah awal membangun mental wirausaha.', fileName: 'Modul Kewirausahaan.pdf', file: 'files/Modul Kewirausahaan.pdf' },
-            { id: 'm3', title: 'Modul Branding Produk', category: 'Branding', desc: 'Cara membangun identitas brand yang kuat.', fileName: 'branding produk.pdf', file: 'files/branding produk.pdf' },
-            { id: 'm4', title: 'Modul Pencatatan Keuangan', category: 'Keuangan', desc: 'Dasar-dasar akuntansi dan pencatatan kas.', fileName: 'Pencatatan Keuangan.pdf', file: 'files/Pencatatan Keuangan.pdf' }
+            { id: 'm1', title: 'Modul Dasar Kewirausahaan', category: 'Dasar', desc: 'Modul lengkap tentang dasar-dasar memulai usaha.', fileName: 'modul-kewirausahaan.pdf', file: dummyPdf },
+            { id: 'm2', title: 'Modul Digital Marketing', category: 'Marketing', desc: 'Panduan pemasaran digital untuk pelaku UMKM.', fileName: 'modul-digital-marketing.pdf', file: dummyPdf },
+            { id: 'm3', title: 'Modul Manajemen Keuangan', category: 'Keuangan', desc: 'Cara mengelola keuangan usaha agar tetap sehat.', fileName: 'modul-keuangan.pdf', file: dummyPdf }
         ]);
+
         DB.set('quizzes', [
             { id: 'q1', title: 'Quiz: Dasar-Dasar UMKM', link: 'https://quizizz.com', desc: 'Uji pemahaman tentang konsep dasar UMKM.', difficulty: 'Mudah' },
             { id: 'q2', title: 'Quiz: Strategi Marketing', link: 'https://quizizz.com', desc: 'Test pengetahuan tentang strategi pemasaran.', difficulty: 'Menengah' },
@@ -114,7 +130,7 @@ function initSeedData() {
         ]);
 
         DB.set('initialized', true);
-        DB.set('init_v8', true);
+        DB.set('init_v9', true);
     }
 }
 initSeedData();
@@ -157,10 +173,20 @@ function getCatColor(cat) { return { 'Makanan': '#e74c3c', 'Minuman': '#f39c12',
 function renderNavbar(activePage) {
     const c = DB.get('config') || {};
     const isPrem = DB.get('premium_user') === true;
+    const auth = DB.get('auth');
 
     const langgananBtn = isPrem
         ? `<button onclick="if(confirm('Batalkan langganan Premium?')){ setPremiumUser(false); location.reload(); }" class="btn btn-outline btn-sm" style="border-color:var(--color-danger); color:var(--color-danger); margin-right:0.5rem;">Batal Langganan</button>`
         : `<a href="langganan.html" class="btn btn-outline btn-sm" style="border-color:var(--accent-400); color:var(--accent-600); margin-right:0.5rem;">💎 Berlangganan</a>`;
+
+    let authBtn = `<a href="login.html" class="btn btn-primary btn-sm">Masuk</a>`;
+    if (auth) {
+        if (auth.role === 'admin') {
+            authBtn = `<a href="admin/dashboard.html" class="btn btn-primary btn-sm">Admin</a>`;
+        } else {
+            authBtn = `<a href="javascript:void(0)" onclick="if(confirm('Logout dari akun ${auth.username}?')){ logout(); }" class="btn btn-primary btn-sm">${auth.username}</a>`;
+        }
+    }
 
     return `
     <style>
@@ -193,7 +219,7 @@ function renderNavbar(activePage) {
                 </div>
             </div>
         </div>
-        <div class="navbar-actions">${langgananBtn}<a href="login.html" class="btn btn-primary btn-sm">Masuk</a></div>
+        <div class="navbar-actions">${langgananBtn}${authBtn}</div>
         <button class="navbar-hamburger" onclick="document.getElementById('navMenu').classList.toggle('active')">☰</button>
     </div></nav>`;
 }
