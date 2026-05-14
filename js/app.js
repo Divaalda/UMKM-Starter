@@ -59,8 +59,8 @@ function getYouTubeEmbedUrl(url) {
 
 /* ---- Seed Data ---- */
 function initSeedData() {
-    if (DB.get('init_v9')) return;
-    if (!DB.get('initialized') || !DB.get('init_v9')) {
+    if (DB.get('init_v12')) return;
+    if (!DB.get('initialized') || !DB.get('init_v12')) {
         DB.set('config', { siteName: 'UMKM Starter Hub', tagline: 'Starter Hub', heroTitle: 'Mulai Usaha UMKM dari Nol, Gak Pake Ribet!', heroSubtitle: 'Panduan langkah demi langkah, inspirasi produk, hingga kalkulator harga jual untuk bantu kamu mulai dan mengembangkan usaha.', heroCta: 'Mulai Sekarang', ctaTitle: 'Siap Mulai Usaha?', ctaDesc: 'Ikuti panduan starter guide dan wujudkan usahamu sekarang juga!', ctaCta: 'Mulai Guide', footerDesc: 'Platform pendamping UMKM pemula untuk memulai usaha dengan lebih mudah.', socialIG: '#', socialYT: '#', socialWA: '#' });
         DB.set('products', [
             { id: 'p1', name: 'Keripik Pisang Cokelat', category: 'Makanan', price: 15000, rating: 4.8, desc: 'Keripik Pisang dengan lapisan cokelat premium', image: 'images/produk-keripik.jpg', color: '#e74c3c' },
@@ -108,7 +108,7 @@ function initSeedData() {
         DB.set('templates', [
             { id: 't1', title: 'Template Laporan Laba Rugi', category: 'Laporan Keuangan', desc: 'Template Excel untuk mencatat pendapatan dan pengeluaran usaha.', fileName: 'laporan-laba-rugi.csv', file: dummyExcel },
             { id: 't2', title: 'Template Arus Kas Harian', category: 'Arus Kas', desc: 'Catat arus kas masuk dan keluar harian usahamu.', fileName: 'arus-kas-harian.csv', file: dummyExcel },
-            { id: 't3', title: 'Template Pembukuan Sederhana', category: 'Pembukuan', desc: 'Template pembukuan dasar untuk UMKM pemula.', fileName: 'pembukuan-sederhana.csv', file: dummyExcel }
+            { id: 't3', title: 'Template Keuangan Sederhana', category: 'Keuangan', desc: 'Template Keuangan dasar untuk UMKM pemula.', fileName: 'template keuangan.xlsx', file: 'files/template keuangan.xlsx' }
         ]);
 
         DB.set('videos', [
@@ -119,9 +119,10 @@ function initSeedData() {
         ]);
 
         DB.set('modules', [
-            { id: 'm1', title: 'Modul Dasar Kewirausahaan', category: 'Dasar', desc: 'Modul lengkap tentang dasar-dasar memulai usaha.', fileName: 'modul-kewirausahaan.pdf', file: dummyPdf },
-            { id: 'm2', title: 'Modul Digital Marketing', category: 'Marketing', desc: 'Panduan pemasaran digital untuk pelaku UMKM.', fileName: 'modul-digital-marketing.pdf', file: dummyPdf },
-            { id: 'm3', title: 'Modul Manajemen Keuangan', category: 'Keuangan', desc: 'Cara mengelola keuangan usaha agar tetap sehat.', fileName: 'modul-keuangan.pdf', file: dummyPdf }
+            { id: 'm1', title: 'Modul Dasar Kewirausahaan', category: 'Dasar', desc: 'Modul lengkap tentang dasar-dasar memulai usaha.', fileName: 'Modul Kewirausahaan.pdf', file: 'files/Modul Kewirausahaan.pdf' },
+            { id: 'm2', title: 'Modul Branding Produk', category: 'Produk', desc: 'Panduan Branding Produk untuk pelaku UMKM.', fileName: 'branding produk.pdf', file: 'files/branding produk.pdf' },
+            { id: 'm3', title: 'Modul Pemasaran Digital', category: 'Marketing', desc: 'Tentang bagaimana cara memasarkan produk untuk UMKM Pemula.', fileName: 'Modul Pemasaran Digital.pdf', file: 'files/Modul Pemasaran Digital.pdf' },
+            { id: 'm4', title: 'Modul Pencatatan Keuangan', category: 'Keuangan', desc: 'Cara mengelola keuangan usaha agar tetap sehat.', fileName: 'Pencatatan Keuangan.pdf', file: 'files/Pencatatan Keuangan.pdf' }
         ]);
 
         DB.set('quizzes', [
@@ -132,7 +133,7 @@ function initSeedData() {
         ]);
 
         DB.set('initialized', true);
-        DB.set('init_v9', true);
+        DB.set('init_v12', true);
     }
 }
 initSeedData();
