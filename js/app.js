@@ -124,9 +124,10 @@ function initSeedData() {
         ]);
 
         DB.set('quizzes', [
-            { id: 'q1', title: 'Quiz: Dasar-Dasar UMKM', link: 'https://quizizz.com', desc: 'Uji pemahaman tentang konsep dasar UMKM.', difficulty: 'Mudah' },
-            { id: 'q2', title: 'Quiz: Strategi Marketing', link: 'https://quizizz.com', desc: 'Test pengetahuan tentang strategi pemasaran.', difficulty: 'Menengah' },
-            { id: 'q3', title: 'Quiz: Manajemen Keuangan', link: 'https://quizizz.com', desc: 'Latihan soal pengelolaan keuangan UMKM.', difficulty: 'Sulit' }
+            { id: 'q1', title: 'Quiz: Dasar-Dasar Kewirausahaan', link: 'https://gemini.google.com/share/a4350b3bc102', desc: 'Uji pemahaman tentang konsep dasar Kewirausahaan.', difficulty: 'Mudah' },
+            { id: 'q2', title: 'Quiz: Pemasaran Digital', link: 'https://gemini.google.com/share/834b928fd306', desc: 'Test pengetahuan tentang strategi pemasaran digital untuk UMKM.', difficulty: 'Menengah' },
+            { id: 'q3', title: 'Quiz: Pencatatan Keuangan', link: 'https://gemini.google.com/share/13e88de61404', desc: 'Latihan soal pencatatan keuangan UMKM.', difficulty: 'Menengah' },
+            { id: 'q4', title: 'Quiz: Branding Produk', link: 'https://gemini.google.com/share/a5a6ae257224', desc: 'Test pengetahuan tentang branding produk UMKM.', difficulty: 'Sulit' }
         ]);
 
         DB.set('initialized', true);
