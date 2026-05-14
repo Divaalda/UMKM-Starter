@@ -78,16 +78,24 @@
 
             if (role === 'admin') {
                 if ((u === 'admin' || u === 'admin@umkm.id') && p === 'admin123') {
-                    DB.set('auth', { username: u, role: 'admin', loggedIn: Date.now() });
+                    DB.set('auth', { username: 'Admin', role: 'admin', loggedIn: Date.now() });
                     window.location.href = 'admin/dashboard.html';
                 } else {
                     errorEl.textContent = 'Kredensial admin salah!';
                     errorEl.style.display = 'block';
                 }
             } else {
-                // Login as User
-                DB.set('auth', { username: u, role: 'user', loggedIn: Date.now() });
-                window.location.href = 'index.html';
+                // Login as User - Check in users database
+                const users = DB.get('users') || [];
+                const user = users.find(usr => (usr.username === u || usr.contact === u) && usr.password === p);
+
+                if (user) {
+                    DB.set('auth', { username: user.username, role: 'user', loggedIn: Date.now() });
+                    window.location.href = 'index.html';
+                } else {
+                    errorEl.textContent = 'Username/Email atau password salah!';
+                    errorEl.style.display = 'block';
+                }
             }
         }
     </script>
